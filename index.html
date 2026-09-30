@@ -63,7 +63,7 @@
             Presiona el botón superior para enviar las métricas macro actuales a Gemini y obtener una síntesis ejecutiva, riesgos ocultos y recomendaciones tácticas de inversión.
           </div>
         </div>
-        <div class="text-xs text-slate-500 mt-2 text-right">Modelo: Gemini Flash Auto-Detect</div>
+        <div class="text-xs text-slate-500 mt-2 text-right">Motor: Gemini API (Auto-Fallback)</div>
       </div>
     </section>
 
@@ -169,7 +169,7 @@
       }
     }
 
-    // Llamada con fallback automático entre modelos de Gemini
+    // Llamada dinámica probando secuencialmente todos los modelos disponibles
     async function runGeminiAnalysis() {
       const apiKey = localStorage.getItem("gemini_api_key") || document.getElementById("apiKeyInput").value.trim();
       if (!apiKey) {
@@ -178,7 +178,7 @@
       }
 
       const outputDiv = document.getElementById("aiOutput");
-      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Analizando datos macroeconómicos y generando diagnóstico con Gemini...</span>";
+      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Analizando datos macroeconómicos y conectando con Gemini...</span>";
 
       const promptText = `Actúa como un analista macroeconómico experto para un inversor técnico chartista. 
 A continuación tienes las lecturas macroeconómicas actuales del mercado:
@@ -193,11 +193,12 @@ Instrucciones de respuesta:
 3. Proporciona una recomendación de asignación de activos entre: S&P500, Oro, Bitcoin, Sectores defensivos y Efectivo.
 4. Conclusión en 2 frases ejecutivas e hiperdirectas para operar hoy.`;
 
-      // Modelos a probar en orden por compatibilidad
+      // Lista actualizada de modelos vigentes
       const modelsToTry = [
-        "gemini-1.5-flash-latest",
+        "gemini-2.5-flash",
         "gemini-2.0-flash",
-        "gemini-1.5-pro-latest"
+        "gemini-2.5-pro",
+        "gemini-flash"
       ];
 
       let success = false;
@@ -218,9 +219,9 @@ Instrucciones de respuesta:
           if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
             outputDiv.innerText = data.candidates[0].content.parts[0].text;
             success = true;
-            break; // Éxito, salir del bucle
+            break;
           } else if (data.error) {
-            lastErrorMessage = `${data.error.message} (${model})`;
+            lastErrorMessage = `${data.error.message} [Modelo probado: ${model}]`;
           }
         } catch (err) {
           lastErrorMessage = err.message;
@@ -228,7 +229,7 @@ Instrucciones de respuesta:
       }
 
       if (!success) {
-        outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de la API:</strong> ${lastErrorMessage}. Verifica que la clave tenga acceso habilitado en Google AI Studio.</span>`;
+        outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error:</strong> ${lastErrorMessage}</span>`;
       }
     }
   </script>
