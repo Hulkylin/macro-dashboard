@@ -63,7 +63,7 @@
             Presiona el botón superior para enviar las métricas macro actuales a Gemini y obtener una síntesis ejecutiva, riesgos ocultos y recomendaciones tácticas de inversión.
           </div>
         </div>
-        <div class="text-xs text-slate-500 mt-2 text-right">Modelo: Gemini 1.5 Flash Latest</div>
+        <div class="text-xs text-slate-500 mt-2 text-right">Motor: Google AI Studio Auto-Discovery</div>
       </div>
     </section>
 
@@ -177,7 +177,7 @@
       }
 
       const outputDiv = document.getElementById("aiOutput");
-      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Analizando datos macroeconómicos y generando informe con Gemini...</span>";
+      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Descubriendo modelos disponibles y conectando con Google...</span>";
 
       const promptText = `Actúa como un analista macroeconómico experto para un inversor técnico chartista. 
 A continuación tienes las lecturas macroeconómicas actuales del mercado:
@@ -192,26 +192,55 @@ Instrucciones de respuesta:
 3. Proporciona una recomendación de asignación de activos entre: S&P500, Oro, Bitcoin, Sectores defensivos y Efectivo.
 4. Conclusión en 2 frases ejecutivas e hiperdirectas para operar hoy.`;
 
+      const headers = {
+        "Content-Type": "application/json",
+        "x-goog-api-key": apiKey
+      };
+
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${encodeURIComponent(apiKey)}`, {
+        // 1. Obtener la lista real de modelos autorizados para tu clave
+        const listRes = await fetch("https://generativelanguage.googleapis.com/v1beta/models", { headers });
+        const listData = await listRes.json();
+
+        let modelName = "";
+        if (listData.models && listData.models.length > 0) {
+          // Buscar un modelo con soporte para generateContent
+          const found = listData.models.find(m => 
+            m.supportedGenerationMethods && 
+            m.supportedGenerationMethods.includes("generateContent") &&
+            m.name.includes("gemini")
+          );
+          if (found) {
+            modelName = found.name; // Ej: "models/gemini-1.5-flash"
+          }
+        }
+
+        // Si la lista no responde, usar el fallback estándar
+        if (!modelName) {
+          modelName = "models/gemini-1.5-flash";
+        }
+
+        // 2. Generar el contenido con el modelo encontrado usando la cabecera oficial x-goog-api-key
+        const genRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: headers,
           body: JSON.stringify({
             contents: [{ parts: [{ text: promptText }] }]
           })
         });
 
-        const data = await response.json();
+        const genData = await genRes.json();
 
-        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
-          outputDiv.innerText = data.candidates[0].content.parts[0].text;
-        } else if (data.error) {
-          outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de la API:</strong> ${data.error.message}</span>`;
+        if (genData.candidates && genData.candidates[0] && genData.candidates[0].content && genData.candidates[0].content.parts[0].text) {
+          outputDiv.innerText = genData.candidates[0].content.parts[0].text;
+        } else if (genData.error) {
+          outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error [${modelName}]:</strong> ${genData.error.message}</span>`;
         } else {
-          outputDiv.innerText = "Error inesperado en el formato de respuesta.";
+          outputDiv.innerText = "Error inesperado al interpretar la respuesta.";
         }
+
       } catch (err) {
-        outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de conexión:</strong> ${err.message}</span>`;
+        outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de red o autenticación:</strong> ${err.message}</span>`;
       }
     }
   </script>
