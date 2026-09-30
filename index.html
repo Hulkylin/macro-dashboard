@@ -63,7 +63,7 @@
             Presiona el botón superior para enviar las métricas macro actuales a Gemini y obtener una síntesis ejecutiva, riesgos ocultos y recomendaciones tácticas de inversión.
           </div>
         </div>
-        <div class="text-xs text-slate-500 mt-2 text-right">Motor: Google AI Multi-Endpoint Strategy</div>
+        <div class="text-xs text-slate-500 mt-2 text-right">Modelo: Gemini 1.5 Flash Latest</div>
       </div>
     </section>
 
@@ -177,7 +177,7 @@
       }
 
       const outputDiv = document.getElementById("aiOutput");
-      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Conectando con la IA de Google y analizando datos...</span>";
+      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Analizando datos macroeconómicos y generando informe con Gemini...</span>";
 
       const promptText = `Actúa como un analista macroeconómico experto para un inversor técnico chartista. 
 A continuación tienes las lecturas macroeconómicas actuales del mercado:
@@ -192,63 +192,27 @@ Instrucciones de respuesta:
 3. Proporciona una recomendación de asignación de activos entre: S&P500, Oro, Bitcoin, Sectores defensivos y Efectivo.
 4. Conclusión en 2 frases ejecutivas e hiperdirectas para operar hoy.`;
 
-      // ESTRATEGIA 1: API de compatibilidad con OpenAI de Google
       try {
-        const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${encodeURIComponent(apiKey)}`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${apiKey}`
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            model: "gemini-3.8-flash",
-            messages: [{ role: "user", content: promptText }]
+            contents: [{ parts: [{ text: promptText }] }]
           })
         });
 
         const data = await response.json();
-        if (data.choices && data.choices[0] && data.choices[0].message) {
-          outputDiv.innerText = data.choices[0].message.content;
-          return;
-        }
-      } catch (e) {
-        console.log("Estrategia 1 no completada, intentando autodetectar modelos...");
-      }
 
-      // ESTRATEGIA 2: Obtener dinámicamente el listado de modelos activos de tu clave
-      try {
-        const modelsResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`);
-        const modelsData = await modelsResponse.json();
-
-        if (modelsData.models && modelsData.models.length > 0) {
-          // Filtrar un modelo que admita generateContent
-          const validModelObj = modelsData.models.find(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent"));
-          if (validModelObj) {
-            const modelName = validModelObj.name; // Formato: "models/gemini-..."
-            const genResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                contents: [{ parts: [{ text: promptText }] }]
-              })
-            });
-
-            const genData = await genResponse.json();
-            if (genData.candidates && genData.candidates[0] && genData.candidates[0].content) {
-              outputDiv.innerText = genData.candidates[0].content.parts[0].text;
-              return;
-            }
-          }
-        } else if (modelsData.error) {
-          outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de autenticación:</strong> ${modelsData.error.message}. Por favor, verifica tu clave.</span>`;
-          return;
+        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
+          outputDiv.innerText = data.candidates[0].content.parts[0].text;
+        } else if (data.error) {
+          outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de la API:</strong> ${data.error.message}</span>`;
+        } else {
+          outputDiv.innerText = "Error inesperado en el formato de respuesta.";
         }
       } catch (err) {
         outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de conexión:</strong> ${err.message}</span>`;
-        return;
       }
-
-      outputDiv.innerHTML = "<span class='text-rose-400'>No se pudo obtener la respuesta de la API. Revisa que la clave guardada sea correcta.</span>";
     }
   </script>
 </body>
