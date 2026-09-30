@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Macro - Control de Riesgo y Deuda</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- TradingView Widgets library -->
+  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8 font-sans">
+
+  <!-- ENCABEZADO -->
+  <header class="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-800 pb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-emerald-400">Dashboard Macro & Riesgo Sistémico</h1>
+      <p class="text-slate-400 text-sm mt-1">Control de liquidez, curva de tipos, estrés de deuda y análisis IA para trading.</p>
+    </div>
+    
+    <!-- Configuración API Key -->
+    <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex items-center gap-3">
+      <span class="text-xs text-slate-300">Gemini API Key:</span>
+      <input type="password" id="apiKeyInput" placeholder="Pega tu clave aquí" class="bg-slate-900 text-xs px-2 py-1.5 rounded border border-slate-700 text-white w-40 focus:outline-none focus:border-emerald-500" />
+      <button onclick="saveApiKey()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-1.5 rounded font-semibold transition">Guardar</button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto space-y-8">
+
+    <!-- SECCIÓN 1: NIVEL DE RIESGO GLOBAL & GENERADOR DE IA -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Indicador Global de Riesgo -->
+      <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col justify-between shadow-lg">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-200">Termómetro de Riesgo Macro</h2>
+          <p class="text-xs text-slate-400 mb-4">Ponderación automática de liquidez, curva y estrés crediticio.</p>
+          <div class="flex items-center justify-center my-6">
+            <div id="riskGauge" class="w-36 h-36 rounded-full border-8 border-emerald-500 flex items-center justify-center flex-col shadow-inner">
+              <span id="riskScore" class="text-4xl font-extrabold text-emerald-400">28</span>
+              <span id="riskLabel" class="text-xs font-bold text-emerald-400 uppercase tracking-widest mt-1">Bajo Riesgo</span>
+            </div>
+          </div>
+        </div>
+        <div class="space-y-2 text-xs text-slate-300 border-t border-slate-700/50 pt-4">
+          <div class="flex justify-between"><span>Fase Actual Estimada:</span> <strong id="phaseText" class="text-emerald-400">Fase 4: Expansión</strong></div>
+          <div class="flex justify-between"><span>Activo Refugio Prioritario:</span> <strong id="hedgeText" class="text-slate-100">S&P 500 / Tech / BTC</strong></div>
+        </div>
+      </div>
+
+      <!-- Análisis Inteligente con Gemini -->
+      <div class="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col justify-between shadow-lg">
+        <div>
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-semibold text-emerald-400 flex items-center gap-2">
+              <span>🤖</span> Diagnóstico Asistido por Gemini IA
+            </h2>
+            <button onclick="runGeminiAnalysis()" id="aiBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow flex items-center gap-2">
+              <span>Generar Informe de Riesgo</span>
+            </button>
+          </div>
+          <div id="aiOutput" class="text-sm text-slate-300 bg-slate-900/60 p-4 rounded-lg border border-slate-700/60 h-48 overflow-y-auto leading-relaxed">
+            Presiona el botón superior para enviar las métricas macro actuales a Gemini y obtener una síntesis ejecutiva, riesgos ocultos y recomendaciones tácticas de inversión.
+          </div>
+        </div>
+        <div class="text-xs text-slate-500 mt-2 text-right">Model: Gemini 1.5 Flash API</div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: INDICADORES CLAVE Y NIVELES DE ALERTA -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Curva 10Y-2Y -->
+      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+        <div class="text-xs text-slate-400 font-medium">Curva de Tipos (US10Y - US02Y)</div>
+        <div class="text-2xl font-bold text-white my-1" id="valInversion">+0.18 %</div>
+        <div class="text-xs text-emerald-400 font-medium">● Normalizada (Desinversión)</div>
+        <p class="text-[11px] text-slate-400 mt-2">Alerta en repuntes rápidos desde negativo a &gt; +0.50% con caída de mercado.</p>
+      </div>
+
+      <!-- High Yield Spread -->
+      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+        <div class="text-xs text-slate-400 font-medium">Diferencial Bonos Basura (HY OAS)</div>
+        <div class="text-2xl font-bold text-white my-1" id="valHY">3.25 %</div>
+        <div class="text-xs text-emerald-400 font-medium">● Zona de Calma (&lt; 3.5%)</div>
+        <p class="text-[11px] text-slate-400 mt-2">Alerta Crítica si supera el 5.0% - 6.0% (Riesgo de impagos/refinanciación).</p>
+      </div>
+
+      <!-- MOVE Index -->
+      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+        <div class="text-xs text-slate-400 font-medium">Índice MOVE (Volatilidad Renta Fija)</div>
+        <div class="text-2xl font-bold text-white my-1" id="valMOVE">98.4</div>
+        <div class="text-xs text-yellow-400 font-medium">● Moderado (90 - 120)</div>
+        <p class="text-[11px] text-slate-400 mt-2">Iliquidez o pánico severo en el mercado de bonos si supera 140 puntos.</p>
+      </div>
+
+      <!-- VIX & Sentiment -->
+      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+        <div class="text-xs text-slate-400 font-medium">VIX / Sentimiento Mercado</div>
+        <div class="text-2xl font-bold text-white my-1" id="valVIX">15.2</div>
+        <div class="text-xs text-emerald-400 font-medium">● Complacencia (&lt; 18)</div>
+        <p class="text-[11px] text-slate-400 mt-2">VIX &gt; 35 indica capitulación / oportunidades de compra en soporte.</p>
+      </div>
+
+    </section>
+
+    <!-- SECCIÓN 3: HERRAMIENTAS INTERACTIVAS (TRADINGVIEW & FINVIZ) -->
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Gráficos de Velas: S&P500 / Gold / BTC -->
+      <div class="lg:col-span-2 bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[500px]">
+        <h3 class="text-md font-semibold text-slate-200 mb-3">Gráfico Técnico Interactivo</h3>
+        <div id="tradingview_chart" class="w-full flex-grow rounded-lg overflow-hidden"></div>
+      </div>
+
+      <!-- Calendario Económico integrando eventos futuros -->
+      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[500px]">
+        <h3 class="text-md font-semibold text-slate-200 mb-3">Calendario Económico & Noticias Macro</h3>
+        <div id="tradingview_events" class="w-full flex-grow rounded-lg overflow-hidden"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- LÓGICA JAVASCRIPT -->
+  <script>
+    // Guardar/Cargar API Key en el almacenamiento del navegador (LocalStorage)
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedKey = localStorage.getItem("gemini_api_key");
+      if (savedKey) document.getElementById("apiKeyInput").value = savedKey;
+      
+      // Cargar Gráficos TradingView
+      new TradingView.widget({
+        "autosize": true,
+        "symbol": "FOREXCOM:SPXUSD",
+        "interval": "D",
+        "timezone": "Etc/UTC",
+        "theme": "dark",
+        "style": "1",
+        "locale": "es",
+        "enable_publishing": false,
+        "container_id": "tradingview_chart"
+      });
+
+      // Cargar Calendario Económico
+      const script = document.createElement('script');
+      script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-events.js';
+      script.async = true;
+      script.innerHTML = JSON.stringify({
+        "colorTheme": "dark",
+        "isTransparent": true,
+        "width": "100%",
+        "height": "100%",
+        "locale": "es",
+        "importanceFilter": "0,1"
+      });
+      document.getElementById("tradingview_events").appendChild(script);
+    });
+
+    function saveApiKey() {
+      const key = document.getElementById("apiKeyInput").value.trim();
+      if (key) {
+        localStorage.setItem("gemini_api_key", key);
+        alert("¡Clave de API guardada correctamente!");
+      }
+    }
+
+    // Llamada a la API de Gemini
+    async function runGeminiAnalysis() {
+      const apiKey = localStorage.getItem("gemini_api_key") || document.getElementById("apiKeyInput").value.trim();
+      if (!apiKey) {
+        alert("Por favor, introduce y guarda tu clave de API de Gemini.");
+        return;
+      }
+
+      const outputDiv = document.getElementById("aiOutput");
+      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Analizando datos macroeconómicos y generando diagnóstico...</span>";
+
+      const promptText = `Actúa como un analista macroeconómico para un inversor técnico chartista. 
+A continuación tienes las lecturas macroeconómicas actuales del mercado:
+- Curva de Tipos (10Y-2Y): +0.18% (Desinversión progresiva)
+- Spread Bonos Basura (HY OAS): 3.25% (Riesgo crediticio bajo)
+- Índice MOVE (Volatilidad Bonos): 98.4
+- Índice VIX: 15.2 (Nivel de complacencia elevado)
+
+Instrucciones de respuesta:
+1. Asigna una Fase de Crisis de Deuda (de la Fase 1 a la 4) y justifica en 1 frase.
+2. Identifica el principal riesgo latente que el análisis técnico podría ignorar ahora mismo.
+3. Proporciona una recomendación de asignación de activos entre: S&P500, Oro, Bitcoin, Sectores defensivos y Efectivo.
+4. Conclusión en 2 frases ejecutivas e hiperdirectas para operar hoy.`;
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: promptText }] }]
+          })
+        });
+
+        const data = await response.json();
+        if (data.candidates && data.candidates[0].content.parts[0].text) {
+          const text = data.candidates[0].content.parts[0].text;
+          outputDiv.innerText = text;
+        } else {
+          outputDiv.innerText = "Error en la respuesta de la API. Verifica que la clave de API sea correcta.";
+        }
+      } catch (err) {
+        outputDiv.innerText = "Error de conexión con la API de Gemini: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
