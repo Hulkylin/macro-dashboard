@@ -63,7 +63,7 @@
             Presiona el botón superior para enviar las métricas macro actuales a Gemini y obtener una síntesis ejecutiva, riesgos ocultos y recomendaciones tácticas de inversión.
           </div>
         </div>
-        <div class="text-xs text-slate-500 mt-2 text-right">Modelo: Gemini 1.5 Flash (Oficial)</div>
+        <div class="text-xs text-slate-500 mt-2 text-right">Modelo: Gemini 3.8 Flash (Activo)</div>
       </div>
     </section>
 
@@ -177,7 +177,7 @@
       }
 
       const outputDiv = document.getElementById("aiOutput");
-      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Enviando datos macroeconómicos a Gemini 1.5 Flash...</span>";
+      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Analizando datos macroeconómicos con Gemini 3.8 Flash...</span>";
 
       const promptText = `Actúa como un analista macroeconómico experto para un inversor técnico chartista. 
 A continuación tienes las lecturas macroeconómicas actuales del mercado:
@@ -192,8 +192,8 @@ Instrucciones de respuesta:
 3. Proporciona una recomendación de asignación de activos entre: S&P500, Oro, Bitcoin, Sectores defensivos y Efectivo.
 4. Conclusión en 2 frases ejecutivas e hiperdirectas para operar hoy.`;
 
-      // Llamada REST estándar de Google AI Studio
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+      // Endpoint oficial para Gemini 3.8 Flash
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
 
       try {
         const response = await fetch(url, {
@@ -218,7 +218,7 @@ Instrucciones de respuesta:
           outputDiv.innerText = "Respuesta vacía o formato no reconocido por la API.";
         }
       } catch (err) {
-        outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de red/petición:</strong> ${err.message}</span>`;
+        outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de red:</strong> ${err.message}</span>`;
       }
     }
   </script>
