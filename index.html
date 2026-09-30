@@ -63,7 +63,7 @@
             Presiona el botón superior para enviar las métricas macro actuales a Gemini y obtener una síntesis ejecutiva, riesgos ocultos y recomendaciones tácticas de inversión.
           </div>
         </div>
-        <div class="text-xs text-slate-500 mt-2 text-right">Motor: Gemini 3.8 Flash (Latest Engine)</div>
+        <div class="text-xs text-slate-500 mt-2 text-right">Modelo: Gemini 1.5 Flash (Oficial)</div>
       </div>
     </section>
 
@@ -177,7 +177,7 @@
       }
 
       const outputDiv = document.getElementById("aiOutput");
-      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Conectando con Gemini 3.8 Flash y procesando el análisis macro...</span>";
+      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Enviando datos macroeconómicos a Gemini 1.5 Flash...</span>";
 
       const promptText = `Actúa como un analista macroeconómico experto para un inversor técnico chartista. 
 A continuación tienes las lecturas macroeconómicas actuales del mercado:
@@ -192,44 +192,34 @@ Instrucciones de respuesta:
 3. Proporciona una recomendación de asignación de activos entre: S&P500, Oro, Bitcoin, Sectores defensivos y Efectivo.
 4. Conclusión en 2 frases ejecutivas e hiperdirectas para operar hoy.`;
 
-      const headers = {
-        "Content-Type": "application/json",
-        "x-goog-api-key": apiKey
-      };
+      // Llamada REST estándar de Google AI Studio
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-      // Modelos soportados según el último aviso de Google API
-      const targetModels = [
-        "models/gemini-3.8-flash",
-        "models/gemini-2.0-flash",
-        "models/gemini-1.5-flash"
-      ];
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: promptText }]
+            }]
+          })
+        });
 
-      let lastError = "";
+        const data = await response.json();
 
-      for (const model of targetModels) {
-        try {
-          const genRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/${model}:generateContent`, {
-            method: "POST",
-            headers: headers,
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: promptText }] }]
-            })
-          });
-
-          const genData = await genRes.json();
-
-          if (genData.candidates && genData.candidates[0] && genData.candidates[0].content && genData.candidates[0].content.parts[0].text) {
-            outputDiv.innerText = genData.candidates[0].content.parts[0].text;
-            return; // ¡Éxito!
-          } else if (genData.error) {
-            lastError = genData.error.message;
-          }
-        } catch (err) {
-          lastError = err.message;
+        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
+          outputDiv.innerText = data.candidates[0].content.parts[0].text;
+        } else if (data.error) {
+          outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error Google API (${data.error.code}):</strong> ${data.error.message}</span>`;
+        } else {
+          outputDiv.innerText = "Respuesta vacía o formato no reconocido por la API.";
         }
+      } catch (err) {
+        outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de red/petición:</strong> ${err.message}</span>`;
       }
-
-      outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error:</strong> ${lastError}</span>`;
     }
   </script>
 </body>
