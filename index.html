@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Macro - Control de Riesgo y Deuda</title>
+  <title>Dashboard Macro & Opciones - Control de Riesgo</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- TradingView Widgets library -->
@@ -11,115 +11,208 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8 font-sans">
 
-  <!-- ENCABEZADO -->
-  <header class="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-800 pb-6">
+  <!-- ENCABEZADO Y CONFIGURACIÓN -->
+  <header class="max-w-7xl mx-auto mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-800 pb-6">
     <div>
-      <h1 class="text-3xl font-bold text-emerald-400">Dashboard Macro & Riesgo Sistémico</h1>
-      <p class="text-slate-400 text-sm mt-1">Control de liquidez, curva de tipos, estrés de deuda y análisis IA para trading.</p>
+      <h1 class="text-3xl font-extrabold text-emerald-400 tracking-tight">Dashboard Macro & Mercado de Opciones</h1>
+      <p class="text-slate-400 text-sm mt-1">Supervisión sistémica: Curva de tipos, estrés de deuda, liquidez, GEX y coberturas.</p>
     </div>
     
     <!-- Configuración API Key -->
-    <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex items-center gap-3">
-      <span class="text-xs text-slate-300">Gemini API Key:</span>
-      <input type="password" id="apiKeyInput" placeholder="Pega tu clave aquí" class="bg-slate-900 text-xs px-2 py-1.5 rounded border border-slate-700 text-white w-48 focus:outline-none focus:border-emerald-500" />
+    <div class="bg-slate-800 p-3 rounded-lg border border-slate-700 flex items-center gap-3 shadow-md">
+      <span class="text-xs text-slate-300 font-medium">Gemini API Key:</span>
+      <input type="password" id="apiKeyInput" placeholder="Pega tu clave aquí" class="bg-slate-900 text-xs px-2.5 py-1.5 rounded border border-slate-700 text-white w-48 focus:outline-none focus:border-emerald-500" />
       <button onclick="saveApiKey()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-1.5 rounded font-semibold transition">Guardar</button>
     </div>
   </header>
 
-  <main class="max-w-7xl mx-auto space-y-8">
+  <main class="max-w-7xl mx-auto space-y-6">
 
-    <!-- SECCIÓN 1: NIVEL DE RIESGO GLOBAL & GENERADOR DE IA -->
+    <!-- SECCIÓN DE DIAGNÓSTICO IA Y TERMÓMETRO -->
     <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Indicador Global de Riesgo -->
+      <!-- Termómetro -->
       <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col justify-between shadow-lg">
         <div>
-          <h2 class="text-lg font-semibold text-slate-200">Termómetro de Riesgo Macro</h2>
-          <p class="text-xs text-slate-400 mb-4">Ponderación automática de liquidez, curva y estrés crediticio.</p>
-          <div class="flex items-center justify-center my-6">
-            <div id="riskGauge" class="w-36 h-36 rounded-full border-8 border-emerald-500 flex items-center justify-center flex-col shadow-inner">
-              <span id="riskScore" class="text-4xl font-extrabold text-emerald-400">28</span>
-              <span id="riskLabel" class="text-xs font-bold text-emerald-400 uppercase tracking-widest mt-1">Bajo Riesgo</span>
+          <h2 class="text-md font-bold text-slate-200 uppercase tracking-wide">Termómetro Macro Global</h2>
+          <p class="text-xs text-slate-400 mb-4">Integración de liquidez, curvas y cobertura GEX.</p>
+          <div class="flex items-center justify-center my-4">
+            <div id="riskGauge" class="w-32 h-32 rounded-full border-8 border-emerald-500 flex items-center justify-center flex-col shadow-inner">
+              <span id="riskScore" class="text-3xl font-extrabold text-emerald-400">28</span>
+              <span id="riskLabel" class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mt-0.5">Bajo Riesgo</span>
             </div>
           </div>
         </div>
-        <div class="space-y-2 text-xs text-slate-300 border-t border-slate-700/50 pt-4">
-          <div class="flex justify-between"><span>Fase Actual Estimada:</span> <strong id="phaseText" class="text-emerald-400">Fase 4: Expansión</strong></div>
-          <div class="flex justify-between"><span>Activo Refugio Prioritario:</span> <strong id="hedgeText" class="text-slate-100">S&P 500 / Tech / BTC</strong></div>
+        <div class="space-y-1.5 text-xs text-slate-300 border-t border-slate-700/50 pt-3">
+          <div class="flex justify-between"><span>Fase Ciclo Deuda:</span> <strong id="phaseText" class="text-emerald-400">Fase 4: Expansión</strong></div>
+          <div class="flex justify-between"><span>Régimen Gamma:</span> <strong class="text-emerald-400">+GEX (Amortiguador)</strong></div>
         </div>
       </div>
 
-      <!-- Análisis Inteligente con Gemini -->
+      <!-- Diagnóstico Asistido por Gemini -->
       <div class="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col justify-between shadow-lg">
         <div>
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold text-emerald-400 flex items-center gap-2">
+          <div class="flex justify-between items-center mb-3">
+            <h2 class="text-md font-bold text-emerald-400 flex items-center gap-2">
               <span>🤖</span> Diagnóstico Asistido por Gemini IA
             </h2>
             <button onclick="runGeminiAnalysis()" id="aiBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow flex items-center gap-2">
               <span>Generar Informe de Riesgo</span>
             </button>
           </div>
-          <div id="aiOutput" class="text-sm text-slate-300 bg-slate-900/60 p-4 rounded-lg border border-slate-700/60 h-48 overflow-y-auto leading-relaxed">
-            Presiona el botón superior para enviar las métricas macro actuales a Gemini y obtener una síntesis ejecutiva, riesgos ocultos y recomendaciones tácticas de inversión.
+          <div id="aiOutput" class="text-xs text-slate-300 bg-slate-900/60 p-4 rounded-lg border border-slate-700/60 h-44 overflow-y-auto leading-relaxed">
+            Presiona el botón superior para enviar las lecturas macroeconómicas y del mercado de opciones a Gemini 3.8 Flash para obtener un informe ejecutivo táctico.
           </div>
         </div>
-        <div class="text-xs text-slate-500 mt-2 text-right">Modelo: Gemini 3.8 Flash (Activo)</div>
+        <div class="text-[11px] text-slate-500 mt-2 text-right">Motor: Gemini 3.8 Flash</div>
       </div>
     </section>
 
-    <!-- SECCIÓN 2: INDICADORES CLAVE Y NIVELES DE ALERTA -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- NAVEGACIÓN DE PESTAÑAS -->
+    <div class="flex border-b border-slate-800 space-x-2 pt-2">
+      <button id="tabBtnFixed" onclick="switchTab('fixed')" class="px-5 py-2.5 font-bold text-sm rounded-t-lg bg-emerald-600 text-white border-b-2 border-emerald-400 transition flex items-center gap-2">
+        <span>🏛️</span> Renta Fija y Deuda
+      </button>
+      <button id="tabBtnEquity" onclick="switchTab('equity')" class="px-5 py-2.5 font-bold text-sm rounded-t-lg bg-slate-800 text-slate-400 hover:text-white transition flex items-center gap-2">
+        <span>📈</span> Renta Variable & Opciones
+      </button>
+    </div>
+
+    <!-- PESTAÑA 1: RENTA FIJA Y DEUDA -->
+    <div id="tabContentFixed" class="space-y-6">
       
-      <!-- Curva 10Y-2Y -->
-      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-        <div class="text-xs text-slate-400 font-medium">Curva de Tipos (US10Y - US02Y)</div>
-        <div class="text-2xl font-bold text-white my-1" id="valInversion">+0.18 %</div>
-        <div class="text-xs text-emerald-400 font-medium">● Normalizada (Desinversión)</div>
-        <p class="text-[11px] text-slate-400 mt-2">Alerta en repuntes rápidos desde negativo a &gt; +0.50% con caída de mercado.</p>
+      <!-- Indicadores Renta Fija -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Curva 10Y-2Y -->
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+          <div class="text-xs text-slate-400 font-medium">Curva de Tipos (US10Y - US02Y)</div>
+          <div class="text-2xl font-bold text-white my-1">+0.18 %</div>
+          <div class="text-xs text-emerald-400 font-medium">● Normalizada (Desinversión)</div>
+          <p class="text-[11px] text-slate-400 mt-2">Alerta en repuntes rápidos desde negativo a &gt; +0.50% con caída del S&P500.</p>
+        </div>
+
+        <!-- HY Spread -->
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+          <div class="text-xs text-slate-400 font-medium">Spread Bonos Basura (HY OAS)</div>
+          <div class="text-2xl font-bold text-white my-1">3.25 %</div>
+          <div class="text-xs text-emerald-400 font-medium">● Calma (&lt; 3.5%)</div>
+          <p class="text-[11px] text-slate-400 mt-2">Alerta Crítica si supera el 5.0% - 6.0% (Riesgo de refinanciación de deuda).</p>
+        </div>
+
+        <!-- MOVE Index -->
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+          <div class="text-xs text-slate-400 font-medium">Índice MOVE (Volatilidad Renta Fija)</div>
+          <div class="text-2xl font-bold text-white my-1">98.4</div>
+          <div class="text-xs text-yellow-400 font-medium">● Moderado (90 - 120)</div>
+          <p class="text-[11px] text-slate-400 mt-2">Tensión e iliquidez severa en el mercado de bonos soberanos si supera 140.</p>
+        </div>
+
+        <!-- Fed Liquidity -->
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+          <div class="text-xs text-slate-400 font-medium">Liquidez Neta Fed (WALCL - RRP - TGA)</div>
+          <div class="text-2xl font-bold text-white my-1">$ 6.12 T</div>
+          <div class="text-xs text-emerald-400 font-medium">● Estilizada / Neutra</div>
+          <p class="text-[11px] text-slate-400 mt-2">Drenajes bruscos de liquidez del Tesoro reducen soporte para activos de riesgo.</p>
+        </div>
       </div>
 
-      <!-- High Yield Spread -->
-      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-        <div class="text-xs text-slate-400 font-medium">Diferencial Bonos Basura (HY OAS)</div>
-        <div class="text-2xl font-bold text-white my-1" id="valHY">3.25 %</div>
-        <div class="text-xs text-emerald-400 font-medium">● Zona de Calma (&lt; 3.5%)</div>
-        <p class="text-[11px] text-slate-400 mt-2">Alerta Crítica si supera el 5.0% - 6.0% (Riesgo de impagos/refinanciación).</p>
+      <!-- Gráficos Renta Fija & Calendario Económico -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[480px]">
+          <h3 class="text-sm font-bold text-slate-200 mb-3">Rendimiento Bono EEUU 10 Años (US10Y)</h3>
+          <div id="tv_chart_us10y" class="w-full flex-grow rounded-lg overflow-hidden"></div>
+        </div>
+
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[480px]">
+          <h3 class="text-sm font-bold text-slate-200 mb-3">Calendario Económico Macro</h3>
+          <div id="tradingview_events" class="w-full flex-grow rounded-lg overflow-hidden"></div>
+        </div>
       </div>
 
-      <!-- MOVE Index -->
-      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-        <div class="text-xs text-slate-400 font-medium">Índice MOVE (Volatilidad Renta Fija)</div>
-        <div class="text-2xl font-bold text-white my-1" id="valMOVE">98.4</div>
-        <div class="text-xs text-yellow-400 font-medium">● Moderado (90 - 120)</div>
-        <p class="text-[11px] text-slate-400 mt-2">Iliquidez o pánico severo en el mercado de bonos si supera 140 puntos.</p>
-      </div>
+    </div>
 
-      <!-- VIX & Sentiment -->
-      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-        <div class="text-xs text-slate-400 font-medium">VIX / Sentimiento Mercado</div>
-        <div class="text-2xl font-bold text-white my-1" id="valVIX">15.2</div>
-        <div class="text-xs text-emerald-400 font-medium">● Complacencia (&lt; 18)</div>
-        <p class="text-[11px] text-slate-400 mt-2">VIX &gt; 35 indica capitulación / oportunidades de compra en soporte.</p>
-      </div>
-
-    </section>
-
-    <!-- SECCIÓN 3: HERRAMIENTAS INTERACTIVAS (TRADINGVIEW & FINVIZ) -->
-    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- PESTAÑA 2: RENTA VARIABLE & OPCIONES -->
+    <div id="tabContentEquity" class="space-y-6 hidden">
       
-      <!-- Gráficos de Velas: S&P500 / Gold / BTC -->
-      <div class="lg:col-span-2 bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[500px]">
-        <h3 class="text-md font-semibold text-slate-200 mb-3">Gráfico Técnico Interactivo</h3>
-        <div id="tradingview_chart" class="w-full flex-grow rounded-lg overflow-hidden"></div>
+      <!-- Bloque Opciones & Coberturas -->
+      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4 shadow-lg">
+        <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
+          <h3 class="text-md font-bold text-emerald-400 flex items-center gap-2">
+            <span>🎯</span> Estructura del Mercado de Opciones (S&P 500)
+          </h3>
+          <span class="text-xs bg-slate-900 text-slate-400 px-2.5 py-1 rounded border border-slate-700">Market Maker Hedging</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- 1. Put/Call Ratio -->
+          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700/60">
+            <div class="text-xs text-slate-400 font-semibold uppercase">Put / Call Ratio (CBOE)</div>
+            <div class="text-2xl font-extrabold text-white my-1">0.85 <span class="text-xs font-normal text-slate-400">(Zona Neutral)</span></div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              • <strong>&gt; 1.15:</strong> Cobertura de pánico. Marca suelos de mercado y rebotes por <em>Short Squeeze</em>.<br/>
+              • <strong>&lt; 0.65:</strong> Complacencia extrema. Elevado riesgo de corrección repentina.
+            </p>
+          </div>
+
+          <!-- 2. Ciclo OpEx y Liberación -->
+          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700/60">
+            <div class="text-xs text-slate-400 font-semibold uppercase">Vencimientos Opciones (OpEx)</div>
+            <div class="text-sm font-bold text-yellow-400 my-1">Vencimiento Mensual en Cierre de Mes</div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              • <strong>Pre-OpEx:</strong> Mercado "Anclado" / El precio busca el punto <em>Max Pain</em>.<br/>
+              • <strong>Post-OpEx:</strong> Descomposición de coberturas. Liberación de tendencia y aceleración.
+            </p>
+          </div>
+
+          <!-- 3. Régimen GEX / Gamma -->
+          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700/60">
+            <div class="text-xs text-slate-400 font-semibold uppercase">Régimen Gamma (GEX)</div>
+            <div class="text-sm font-bold text-emerald-400 my-1">Long Gamma (+GEX)</div>
+            <p class="text-[11px] text-slate-400 leading-relaxed">
+              • <strong>+GEX (Zona Verde):</strong> MMs compran caídas. Volatilidad contenida y precio sujeto.<br/>
+              • <strong>-GEX (Zona Roja):</strong> Venta forzada de coberturas. Caídas aceleradas / VIX disparado.
+            </p>
+          </div>
+        </div>
       </div>
 
-      <!-- Calendario Económico integrando eventos futuros -->
+      <!-- Indicadores de Volatilidad Renta Variable -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+          <div class="text-xs text-slate-400 font-medium">Índice VIX</div>
+          <div class="text-2xl font-bold text-white my-1">15.2</div>
+          <div class="text-xs text-emerald-400 font-medium">● Complacencia (&lt; 18)</div>
+          <p class="text-[11px] text-slate-400 mt-2">VIX &gt; 35 indica capitulación e inminentes zonas de rebote táctico.</p>
+        </div>
+
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+          <div class="text-xs text-slate-400 font-medium">Ratio CBOE Put/Call (CPC)</div>
+          <div class="text-2xl font-bold text-white my-1">0.85</div>
+          <div class="text-xs text-slate-300 font-medium">● Neutro / Equilibrado</div>
+          <p class="text-[11px] text-slate-400 mt-2">Vigilar picos superiores a 1.20 como señal contraria de compra.</p>
+        </div>
+
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+          <div class="text-xs text-slate-400 font-medium">S&P 500 / Volatilidad Realizada</div>
+          <div class="text-2xl font-bold text-white my-1">12.8 %</div>
+          <div class="text-xs text-emerald-400 font-medium">● Rango Contenido</div>
+          <p class="text-[11px] text-slate-400 mt-2">Comoresión extrema antecede expansiones bruscas de rango.</p>
+        </div>
+
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
+          <div class="text-xs text-slate-400 font-medium">Bitcoin Correlación Macro</div>
+          <div class="text-2xl font-bold text-white my-1">+0.74</div>
+          <div class="text-xs text-emerald-400 font-medium">● Alta Línea con SPX</div>
+          <p class="text-[11px] text-slate-400 mt-2">Actúa como termómetro adelantado del apetito por liquidez global.</p>
+        </div>
+      </div>
+
+      <!-- Gráfico Renta Variable (S&P 500) -->
       <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[500px]">
-        <h3 class="text-md font-semibold text-slate-200 mb-3">Calendario Económico & Noticias Macro</h3>
-        <div id="tradingview_events" class="w-full flex-grow rounded-lg overflow-hidden"></div>
+        <h3 class="text-sm font-bold text-slate-200 mb-3">Gráfico Interactivo S&P 500 (SPX)</h3>
+        <div id="tv_chart_spx" class="w-full flex-grow rounded-lg overflow-hidden"></div>
       </div>
 
-    </section>
+    </div>
 
   </main>
 
@@ -129,22 +222,60 @@
       const savedKey = localStorage.getItem("gemini_api_key");
       if (savedKey) document.getElementById("apiKeyInput").value = savedKey;
       
-      // Cargar Gráficos TradingView
-      if (typeof TradingView !== "undefined") {
-        new TradingView.widget({
-          "autosize": true,
-          "symbol": "FOREXCOM:SPXUSD",
-          "interval": "D",
-          "timezone": "Etc/UTC",
-          "theme": "dark",
-          "style": "1",
-          "locale": "es",
-          "enable_publishing": false,
-          "container_id": "tradingview_chart"
-        });
-      }
+      // Inicializar Gráficos de TradingView
+      initTradingViewCharts();
+    });
 
-      // Cargar Calendario Económico
+    // Control de Pestañas
+    function switchTab(tab) {
+      const btnFixed = document.getElementById("tabBtnFixed");
+      const btnEquity = document.getElementById("tabBtnEquity");
+      const contentFixed = document.getElementById("tabContentFixed");
+      const contentEquity = document.getElementById("tabContentEquity");
+
+      if (tab === 'fixed') {
+        contentFixed.classList.remove("hidden");
+        contentEquity.classList.add("hidden");
+        btnFixed.className = "px-5 py-2.5 font-bold text-sm rounded-t-lg bg-emerald-600 text-white border-b-2 border-emerald-400 transition flex items-center gap-2";
+        btnEquity.className = "px-5 py-2.5 font-bold text-sm rounded-t-lg bg-slate-800 text-slate-400 hover:text-white transition flex items-center gap-2";
+      } else {
+        contentEquity.classList.remove("hidden");
+        contentFixed.classList.add("hidden");
+        btnEquity.className = "px-5 py-2.5 font-bold text-sm rounded-t-lg bg-emerald-600 text-white border-b-2 border-emerald-400 transition flex items-center gap-2";
+        btnFixed.className = "px-5 py-2.5 font-bold text-sm rounded-t-lg bg-slate-800 text-slate-400 hover:text-white transition flex items-center gap-2";
+      }
+    }
+
+    function initTradingViewCharts() {
+      if (typeof TradingView === "undefined") return;
+
+      // Gráfico US10Y
+      new TradingView.widget({
+        "autosize": true,
+        "symbol": "TVC:US10Y",
+        "interval": "D",
+        "timezone": "Etc/UTC",
+        "theme": "dark",
+        "style": "1",
+        "locale": "es",
+        "enable_publishing": false,
+        "container_id": "tv_chart_us10y"
+      });
+
+      // Gráfico S&P 500
+      new TradingView.widget({
+        "autosize": true,
+        "symbol": "FOREXCOM:SPXUSD",
+        "interval": "D",
+        "timezone": "Etc/UTC",
+        "theme": "dark",
+        "style": "1",
+        "locale": "es",
+        "enable_publishing": false,
+        "container_id": "tv_chart_spx"
+      });
+
+      // Calendario Económico
       const script = document.createElement('script');
       script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-events.js';
       script.async = true;
@@ -157,7 +288,7 @@
         "importanceFilter": "0,1"
       });
       document.getElementById("tradingview_events").appendChild(script);
-    });
+    }
 
     function saveApiKey() {
       const key = document.getElementById("apiKeyInput").value.trim();
@@ -169,6 +300,7 @@
       }
     }
 
+    // Análisis Inteligente integrando Opciones y Deuda con Gemini 3.8 Flash
     async function runGeminiAnalysis() {
       const apiKey = localStorage.getItem("gemini_api_key") || document.getElementById("apiKeyInput").value.trim();
       if (!apiKey) {
@@ -177,34 +309,30 @@
       }
 
       const outputDiv = document.getElementById("aiOutput");
-      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Analizando datos macroeconómicos con Gemini 3.8 Flash...</span>";
+      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Analizando estrucucutra macro y mercado de opciones con Gemini 3.8 Flash...</span>";
 
-      const promptText = `Actúa como un analista macroeconómico experto para un inversor técnico chartista. 
-A continuación tienes las lecturas macroeconómicas actuales del mercado:
+      const promptText = `Actúa como un analista macroeconómico y cuantitativo experto en la estructura del mercado de opciones (Gamma, OpEx, Put/Call) para un trader de S&P500/BTC.
+
+A continuación tienes las lecturas actuales:
 - Curva de Tipos (10Y-2Y): +0.18% (Desinversión progresiva)
 - Spread Bonos Basura (HY OAS): 3.25% (Riesgo crediticio bajo)
-- Índice MOVE (Volatilidad Bonos): 98.4
-- Índice VIX: 15.2 (Nivel de complacencia elevado)
+- Índice MOVE: 98.4 | VIX: 15.2
+- Estado de Opciones: Put/Call Ratio en 0.85, ventana OpEx en régimen Long Gamma (+GEX).
 
 Instrucciones de respuesta:
-1. Asigna una Fase de Crisis de Deuda (de la Fase 1 a la 4) y justifica en 1 frase.
-2. Identifica el principal riesgo latente que el análisis técnico podría ignorar ahora mismo.
-3. Proporciona una recomendación de asignación de activos entre: S&P500, Oro, Bitcoin, Sectores defensivos y Efectivo.
-4. Conclusión en 2 frases ejecutivas e hiperdirectas para operar hoy.`;
+1. Asigna una Fase de Crisis de Deuda (1 a 4) y justifica en 1 frase.
+2. Explica cómo la dinámica de Opciones/OpEx actual afecta al S&P500 (¿Mercado anclado o riesgo de ruptura post-expiración?).
+3. Identifica el principal riesgo latente que el análisis técnico clásico ignora ahora mismo.
+4. Recomendación de asignación de activos entre S&P500, Oro, BTC y Efectivo, finalizando con una conclusión ejecutiva de 2 frases.`;
 
-      // Endpoint oficial para Gemini 3.8 Flash
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
 
       try {
         const response = await fetch(url, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{
-              parts: [{ text: promptText }]
-            }]
+            contents: [{ parts: [{ text: promptText }] }]
           })
         });
 
@@ -213,9 +341,9 @@ Instrucciones de respuesta:
         if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
           outputDiv.innerText = data.candidates[0].content.parts[0].text;
         } else if (data.error) {
-          outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error Google API (${data.error.code}):</strong> ${data.error.message}</span>`;
+          outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error API (${data.error.code}):</strong> ${data.error.message}</span>`;
         } else {
-          outputDiv.innerText = "Respuesta vacía o formato no reconocido por la API.";
+          outputDiv.innerText = "Respuesta vacía o formato no reconocido.";
         }
       } catch (err) {
         outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de red:</strong> ${err.message}</span>`;
