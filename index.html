@@ -28,7 +28,7 @@
 
   <main class="max-w-7xl mx-auto space-y-6">
 
-    <!-- 1. NAVEGACIÓN PRINCIPAL DE PESTAÑAS (EN LO MÁS ALTO) -->
+    <!-- 1. NAVEGACIÓN PRINCIPAL DE PESTAÑAS -->
     <div class="flex border-b border-slate-800 space-x-2 pt-1">
       <button id="tabBtnFixed" onclick="switchTab('fixed')" class="px-5 py-2.5 font-bold text-sm rounded-t-lg bg-emerald-600 text-white border-b-2 border-emerald-400 transition flex items-center gap-2">
         <span>🏛️</span> Renta Fija, Tipos & Deuda (USA)
@@ -81,7 +81,7 @@
             <button onclick="askGemini()" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-4 py-2 rounded-lg font-bold border border-slate-600 transition flex-shrink-0">Preguntar</button>
           </div>
         </div>
-        <div class="text-[11px] text-slate-500 mt-2 text-right">Motor: Gemini Flash Engine</div>
+        <div class="text-[11px] text-slate-500 mt-2 text-right">Motor: Gemini 2.0 Flash</div>
       </div>
     </section>
 
@@ -98,14 +98,14 @@
                 <p class="text-xs text-slate-400">Serie Oficial Reserva Federal (EE.UU.)</p>
               </div>
               <div class="flex gap-2">
-                <button onclick="zoomGraph('fred', 'https://fred.stlouisfed.org/graph/fredgraph.png?id=T10Y2Y', 'Curva de Tipos 10Y-2Y (FRED: T10Y2Y)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-600 font-semibold transition">🔍 Ampliar</button>
+                <button onclick="zoomGraph('fred', 'T10Y2Y', 'Curva de Tipos 10Y-2Y (FRED: T10Y2Y)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-600 font-semibold transition">🔍 Ampliar</button>
                 <button onclick="openModal('yield_curve')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition">💬 Riesgo</button>
               </div>
             </div>
             <div class="text-2xl font-extrabold text-white mt-1">+0.18 % <span class="text-xs font-semibold text-emerald-400">(Normalizada)</span></div>
           </div>
-          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-slate-900">
-            <iframe src="https://fred.stlouisfed.org/graph/graph-iframe.png?id=T10Y2Y&width=650&height=310" scrolling="no" class="w-full h-full border-0"></iframe>
+          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-white">
+            <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1uS5N&width=600&height=300" class="w-full h-full border-0"></iframe>
           </div>
         </div>
 
@@ -118,14 +118,14 @@
                 <p class="text-xs text-slate-400">Diferencial de impago bonos basura EE.UU.</p>
               </div>
               <div class="flex gap-2">
-                <button onclick="zoomGraph('fred', 'https://fred.stlouisfed.org/graph/fredgraph.png?id=BAMLH0A0HYM2', 'Spread High Yield OAS (FRED: BAMLH0A0HYM2)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-600 font-semibold transition">🔍 Ampliar</button>
+                <button onclick="zoomGraph('fred', 'BAMLH0A0HYM2', 'Spread High Yield OAS (FRED: BAMLH0A0HYM2)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-600 font-semibold transition">🔍 Ampliar</button>
                 <button onclick="openModal('hy_oas')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition">💬 Riesgo</button>
               </div>
             </div>
             <div class="text-2xl font-extrabold text-white mt-1">3.25 % <span class="text-xs font-semibold text-emerald-400">(Tranquilidad)</span></div>
           </div>
-          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-slate-900">
-            <iframe src="https://fred.stlouisfed.org/graph/graph-iframe.png?id=BAMLH0A0HYM2&width=650&height=310" scrolling="no" class="w-full h-full border-0"></iframe>
+          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-white">
+            <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1uS61&width=600&height=300" class="w-full h-full border-0"></iframe>
           </div>
         </div>
 
@@ -144,7 +144,7 @@
             </div>
             <div class="text-2xl font-extrabold text-white mt-1">98.4 <span class="text-xs font-semibold text-yellow-400">(Moderado)</span></div>
           </div>
-          <div id="tv_move_chart" class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60"></div>
+          <div id="tv_move_container" class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60"></div>
         </div>
 
         <!-- 4. Activos Totales Fed (FRED: WALCL) -->
@@ -156,14 +156,14 @@
                 <p class="text-xs text-slate-400">Liquidez total en el balance de la Reserva Federal</p>
               </div>
               <div class="flex gap-2">
-                <button onclick="zoomGraph('fred', 'https://fred.stlouisfed.org/graph/fredgraph.png?id=WALCL', 'Balance Activos Fed (FRED: WALCL)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-600 font-semibold transition">🔍 Ampliar</button>
+                <button onclick="zoomGraph('fred', 'WALCL', 'Balance Activos Fed (FRED: WALCL)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-600 font-semibold transition">🔍 Ampliar</button>
                 <button onclick="openModal('fed_liquidity')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition">💬 Riesgo</button>
               </div>
             </div>
             <div class="text-2xl font-extrabold text-white mt-1">$ 6.88 Billones <span class="text-xs font-semibold text-emerald-400">(Estable)</span></div>
           </div>
-          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-slate-900">
-            <iframe src="https://fred.stlouisfed.org/graph/graph-iframe.png?id=WALCL&width=650&height=310" scrolling="no" class="w-full h-full border-0"></iframe>
+          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-white">
+            <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1uS6f&width=600&height=300" class="w-full h-full border-0"></iframe>
           </div>
         </div>
 
@@ -181,7 +181,7 @@
             </div>
             <button onclick="zoomGraph('tv', 'CBOT:ZN1!', 'Precio Futuro Bono 10 Años (ZN1!)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1 rounded border border-slate-600 font-semibold">🔍 Ampliar</button>
           </div>
-          <div id="tv_chart_zn" class="w-full flex-grow rounded-lg overflow-hidden"></div>
+          <div id="tv_zn_container" class="w-full flex-grow rounded-lg overflow-hidden"></div>
         </div>
 
         <!-- Interés / Rentabilidad Oficial (Yield US10Y) -->
@@ -193,7 +193,7 @@
             </div>
             <button onclick="zoomGraph('tv', 'TVC:US10Y', 'Interés Bono EE.UU. 10 Años (US10Y)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1 rounded border border-slate-600 font-semibold">🔍 Ampliar</button>
           </div>
-          <div id="tv_chart_us10y" class="w-full flex-grow rounded-lg overflow-hidden"></div>
+          <div id="tv_us10y_container" class="w-full flex-grow rounded-lg overflow-hidden"></div>
         </div>
 
       </div>
@@ -219,13 +219,13 @@
                 <p class="text-xs text-slate-400">Proporción de apuestas bajistas vs alcistas</p>
               </div>
               <div class="flex gap-2">
-                <button onclick="zoomGraph('tv', 'CBOE:CPC', 'CBOE Put/Call Ratio (CPC)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-600 font-semibold transition">🔍 Ampliar</button>
+                <button onclick="zoomGraph('tv', 'CBOE:PCC', 'CBOE Put/Call Ratio (PCC)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-600 font-semibold transition">🔍 Ampliar</button>
                 <button onclick="openModal('put_call')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition">💬 Riesgo</button>
               </div>
             </div>
             <div class="text-2xl font-extrabold text-white mt-1">0.58 <span class="text-xs font-semibold text-emerald-400">(Complacencia)</span></div>
           </div>
-          <div id="tv_cpc_chart" class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60"></div>
+          <div id="tv_pcc_container" class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60"></div>
         </div>
 
         <!-- Gamma Exposure (GEX) -->
@@ -303,7 +303,7 @@
             </div>
             <div class="text-2xl font-extrabold text-white mt-1">15.2 <span class="text-xs font-semibold text-emerald-400">(Complacencia)</span></div>
           </div>
-          <div id="tv_vix_chart" class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60"></div>
+          <div id="tv_vix_container" class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60"></div>
         </div>
 
       </div>
@@ -314,7 +314,7 @@
           <h3 class="text-sm font-bold text-slate-200">Gráfico Interactivo S&P 500 (SPX)</h3>
           <button onclick="zoomGraph('tv', 'FOREXCOM:SPXUSD', 'S&P 500 (SPXUSD)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1 rounded border border-slate-600 font-semibold">🔍 Ampliar</button>
         </div>
-        <div id="tv_chart_spx" class="w-full flex-grow rounded-lg overflow-hidden"></div>
+        <div id="tv_spx_container" class="w-full flex-grow rounded-lg overflow-hidden"></div>
       </div>
 
     </div>
@@ -424,88 +424,50 @@
       }
     }
 
+    function createTVWidget(containerId, symbol, style = "1") {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = ""; // Limpiar contenedor previo
+
+      new TradingView.widget({
+        "autosize": true,
+        "symbol": symbol,
+        "interval": "D",
+        "theme": "dark",
+        "style": style,
+        "locale": "es",
+        "container_id": containerId
+      });
+    }
+
     function initTradingViewCharts() {
       if (typeof TradingView === "undefined") return;
 
-      // 1. Futuro del Bono 10A (Precio ZN)
-      new TradingView.widget({
-        "autosize": true,
-        "symbol": "CBOT:ZN1!",
-        "interval": "D",
-        "theme": "dark",
-        "style": "1",
-        "locale": "es",
-        "container_id": "tv_chart_zn"
-      });
+      // Renderizado individual asegurado con IDs únicos
+      createTVWidget("tv_move_container", "TVC:MOVE", "2");
+      createTVWidget("tv_zn_container", "CBOT:ZN1!", "1");
+      createTVWidget("tv_us10y_container", "TVC:US10Y", "1");
+      createTVWidget("tv_pcc_container", "CBOE:PCC", "2");
+      createTVWidget("tv_vix_container", "CBOE:VIX", "2");
+      createTVWidget("tv_spx_container", "FOREXCOM:SPXUSD", "1");
 
-      // 2. Rendimiento / Interés del Bono 10A (Yield US10Y)
-      new TradingView.widget({
-        "autosize": true,
-        "symbol": "TVC:US10Y",
-        "interval": "D",
-        "theme": "dark",
-        "style": "1",
-        "locale": "es",
-        "container_id": "tv_chart_us10y"
-      });
-
-      // 3. S&P 500
-      new TradingView.widget({
-        "autosize": true,
-        "symbol": "FOREXCOM:SPXUSD",
-        "interval": "D",
-        "theme": "dark",
-        "style": "1",
-        "locale": "es",
-        "container_id": "tv_chart_spx"
-      });
-
-      // 4. Índice MOVE
-      new TradingView.widget({
-        "autosize": true,
-        "symbol": "TVC:MOVE",
-        "interval": "D",
-        "theme": "dark",
-        "style": "2",
-        "locale": "es",
-        "container_id": "tv_move_chart"
-      });
-
-      // 5. VIX
-      new TradingView.widget({
-        "autosize": true,
-        "symbol": "CBOE:VIX",
-        "interval": "D",
-        "theme": "dark",
-        "style": "2",
-        "locale": "es",
-        "container_id": "tv_vix_chart"
-      });
-
-      // 6. Put/Call Ratio
-      new TradingView.widget({
-        "autosize": true,
-        "symbol": "CBOE:CPC",
-        "interval": "D",
-        "theme": "dark",
-        "style": "2",
-        "locale": "es",
-        "container_id": "tv_cpc_chart"
-      });
-
-      // Calendario
-      const script = document.createElement('script');
-      script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-events.js';
-      script.async = true;
-      script.innerHTML = JSON.stringify({
-        "colorTheme": "dark",
-        "isTransparent": true,
-        "width": "100%",
-        "height": "100%",
-        "locale": "es",
-        "importanceFilter": "0,1"
-      });
-      document.getElementById("tradingview_events").appendChild(script);
+      // Calendario de eventos
+      const eventsContainer = document.getElementById("tradingview_events");
+      if (eventsContainer) {
+        eventsContainer.innerHTML = "";
+        const script = document.createElement('script');
+        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-events.js';
+        script.async = true;
+        script.innerHTML = JSON.stringify({
+          "colorTheme": "dark",
+          "isTransparent": true,
+          "width": "100%",
+          "height": "100%",
+          "locale": "es",
+          "importanceFilter": "0,1"
+        });
+        eventsContainer.appendChild(script);
+      }
     }
 
     function zoomGraph(type, source, title) {
@@ -514,7 +476,7 @@
       target.innerHTML = "";
 
       if (type === 'fred') {
-        target.innerHTML = `<iframe src="${source}" scrolling="no" class="w-full h-full border-0 bg-slate-900"></iframe>`;
+        target.innerHTML = `<iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1uS5N&width=1100&height=600" scrolling="no" class="w-full h-full border-0 bg-white"></iframe>`;
       } else if (type === 'tv') {
         const div = document.createElement("div");
         div.id = "zoom_tv_container";
@@ -689,7 +651,7 @@
       }
 
       const outputDiv = document.getElementById("aiOutput");
-      outputDiv.innerHTML = `<p class='text-emerald-400 font-semibold animate-pulse'>Procesando informe general con datos en vivo...</p>`;
+      outputDiv.innerHTML = `<p class='text-emerald-400 font-semibold animate-pulse'>Procesando informe general con Gemini 2.0 Flash...</p>`;
 
       const promptText = `Actúa como un mentor financiero y analista cuantitativo experto para el Dashboard Inversiones.
 
@@ -733,8 +695,9 @@ Instrucciones: Responde de forma concisa, didáctica y directa utilizando los da
       await callGeminiApi(apiKey, promptText, document.getElementById("latestAnswer"), true);
     }
 
+    // LLAMADA A API DE GEMINI CON MODELOS ACTUALIZADOS
     async function callGeminiApi(apiKey, promptText, targetElement, isAppend) {
-      const candidateModels = ["gemini-3.8-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+      const candidateModels = ["gemini-2.0-flash", "gemini-2.5-flash"];
       let lastError = "";
 
       for (const model of candidateModels) {
