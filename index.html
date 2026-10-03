@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Macro & Opciones - Control de Riesgo</title>
+  <title>Dashboard Macro & Opciones Explicado</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- TradingView Widgets library -->
@@ -11,11 +11,11 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen p-4 md:p-8 font-sans">
 
-  <!-- ENCABEZADO Y CONFIGURACIÓN -->
+  <!-- ENCABEZADO Y CONFIGURACIÓN API KEY -->
   <header class="max-w-7xl mx-auto mb-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-800 pb-6">
     <div>
       <h1 class="text-3xl font-extrabold text-emerald-400 tracking-tight">Dashboard Macro & Mercado de Opciones</h1>
-      <p class="text-slate-400 text-sm mt-1">Supervisión sistémica: Curva de tipos, estrés de deuda, liquidez, GEX y coberturas.</p>
+      <p class="text-slate-400 text-sm mt-1">Guía gráfica interactiva con mapa de riesgos en color y explicaciones paso a paso.</p>
     </div>
     
     <!-- Configuración API Key -->
@@ -28,13 +28,13 @@
 
   <main class="max-w-7xl mx-auto space-y-6">
 
-    <!-- SECCIÓN DE DIAGNÓSTICO IA Y TERMÓMETRO -->
+    <!-- RESUMEN PRINCIPAL & GENERADOR IA -->
     <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Termómetro -->
       <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 flex flex-col justify-between shadow-lg">
         <div>
-          <h2 class="text-md font-bold text-slate-200 uppercase tracking-wide">Termómetro Macro Global</h2>
-          <p class="text-xs text-slate-400 mb-4">Integración de liquidez, curvas y cobertura GEX.</p>
+          <h2 class="text-md font-bold text-slate-200 uppercase tracking-wide">Termómetro de Riesgo Sistémico</h2>
+          <p class="text-xs text-slate-400 mb-4">Combina Curva, Deuda, Liquidez y Mercado de Opciones.</p>
           <div class="flex items-center justify-center my-4">
             <div id="riskGauge" class="w-32 h-32 rounded-full border-8 border-emerald-500 flex items-center justify-center flex-col shadow-inner">
               <span id="riskScore" class="text-3xl font-extrabold text-emerald-400">28</span>
@@ -44,7 +44,7 @@
         </div>
         <div class="space-y-1.5 text-xs text-slate-300 border-t border-slate-700/50 pt-3">
           <div class="flex justify-between"><span>Fase Ciclo Deuda:</span> <strong id="phaseText" class="text-emerald-400">Fase 4: Expansión</strong></div>
-          <div class="flex justify-between"><span>Régimen Gamma:</span> <strong class="text-emerald-400">+GEX (Amortiguador)</strong></div>
+          <div class="flex justify-between"><span>Régimen Gamma Opciones:</span> <strong class="text-emerald-400">+GEX (Sujeto/Tranquilo)</strong></div>
         </div>
       </div>
 
@@ -53,77 +53,124 @@
         <div>
           <div class="flex justify-between items-center mb-3">
             <h2 class="text-md font-bold text-emerald-400 flex items-center gap-2">
-              <span>🤖</span> Diagnóstico Asistido por Gemini IA
+              <span>🤖</span> Informe Didáctico Asistido por Gemini IA
             </h2>
             <button onclick="runGeminiAnalysis()" id="aiBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow flex items-center gap-2">
-              <span>Generar Informe de Riesgo</span>
+              <span>Generar Informe Sencillo</span>
             </button>
           </div>
           <div id="aiOutput" class="text-xs text-slate-300 bg-slate-900/60 p-4 rounded-lg border border-slate-700/60 h-44 overflow-y-auto leading-relaxed">
-            Presiona el botón superior para enviar las lecturas macroeconómicas y del mercado de opciones a Gemini 3.8 Flash para obtener un informe ejecutivo táctico.
+            Pulsa el botón para enviar los datos actuales a Gemini y obtener un diagnóstico explicado de forma sencilla sobre los riesgos reales del mercado hoy.
           </div>
         </div>
-        <div class="text-[11px] text-slate-500 mt-2 text-right">Motor: Gemini 3.8 Flash</div>
+        <div class="text-[11px] text-slate-500 mt-2 text-right">Motor: Gemini Flash (Auto-Retry)</div>
       </div>
     </section>
 
     <!-- NAVEGACIÓN DE PESTAÑAS -->
     <div class="flex border-b border-slate-800 space-x-2 pt-2">
       <button id="tabBtnFixed" onclick="switchTab('fixed')" class="px-5 py-2.5 font-bold text-sm rounded-t-lg bg-emerald-600 text-white border-b-2 border-emerald-400 transition flex items-center gap-2">
-        <span>🏛️</span> Renta Fija y Deuda
+        <span>🏛️</span> Renta Fija, Tipos & Deuda
       </button>
       <button id="tabBtnEquity" onclick="switchTab('equity')" class="px-5 py-2.5 font-bold text-sm rounded-t-lg bg-slate-800 text-slate-400 hover:text-white transition flex items-center gap-2">
-        <span>📈</span> Renta Variable & Opciones
+        <span>📈</span> Renta Variable & Mercado de Opciones
       </button>
     </div>
 
     <!-- PESTAÑA 1: RENTA FIJA Y DEUDA -->
     <div id="tabContentFixed" class="space-y-6">
       
-      <!-- Indicadores Renta Fija -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <!-- Curva 10Y-2Y -->
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div class="text-xs text-slate-400 font-medium">Curva de Tipos (US10Y - US02Y)</div>
-          <div class="text-2xl font-bold text-white my-1">+0.18 %</div>
-          <div class="text-xs text-emerald-400 font-medium">● Normalizada (Desinversión)</div>
-          <p class="text-[11px] text-slate-400 mt-2">Alerta en repuntes rápidos desde negativo a &gt; +0.50% con caída del S&P500.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- 1. Curva de Tipos (US10Y - US02Y) -->
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between shadow-lg space-y-3">
+          <div>
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-slate-100 text-md">1. Curva de Tipos (10Y - 2Y)</h3>
+                <p class="text-xs text-slate-400">Diferencia de interés entre bono a 10 años y 2 años</p>
+              </div>
+              <button onclick="openModal('yield_curve')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition flex items-center gap-1">
+                <span>💬</span> Explicación & Riesgo
+              </button>
+            </div>
+            <div class="text-2xl font-extrabold text-white mt-2">+0.18 % <span class="text-xs font-semibold text-emerald-400">(Zona Normalizada)</span></div>
+          </div>
+          <!-- Gráfica Histórica en Vivo -->
+          <div class="h-48 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-slate-900">
+            <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1vU4Q&width=500&height=200" scrolling="no" class="w-full h-full border-0"></iframe>
+          </div>
         </div>
 
-        <!-- HY Spread -->
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div class="text-xs text-slate-400 font-medium">Spread Bonos Basura (HY OAS)</div>
-          <div class="text-2xl font-bold text-white my-1">3.25 %</div>
-          <div class="text-xs text-emerald-400 font-medium">● Calma (&lt; 3.5%)</div>
-          <p class="text-[11px] text-slate-400 mt-2">Alerta Crítica si supera el 5.0% - 6.0% (Riesgo de refinanciación de deuda).</p>
+        <!-- 2. Differential Bonos Basura (HY OAS) -->
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between shadow-lg space-y-3">
+          <div>
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-slate-100 text-md">2. Spread Bonos Basura (HY OAS)</h3>
+                <p class="text-xs text-slate-400">Termómetro de impagos en empresas de alto riesgo</p>
+              </div>
+              <button onclick="openModal('hy_oas')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition flex items-center gap-1">
+                <span>💬</span> Explicación & Riesgo
+              </button>
+            </div>
+            <div class="text-2xl font-extrabold text-white mt-2">3.25 % <span class="text-xs font-semibold text-emerald-400">(Tranquilidad)</span></div>
+          </div>
+          <!-- Gráfica Histórica en Vivo -->
+          <div class="h-48 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-slate-900">
+            <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1vU58&width=500&height=200" scrolling="no" class="w-full h-full border-0"></iframe>
+          </div>
         </div>
 
-        <!-- MOVE Index -->
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div class="text-xs text-slate-400 font-medium">Índice MOVE (Volatilidad Renta Fija)</div>
-          <div class="text-2xl font-bold text-white my-1">98.4</div>
-          <div class="text-xs text-yellow-400 font-medium">● Moderado (90 - 120)</div>
-          <p class="text-[11px] text-slate-400 mt-2">Tensión e iliquidez severa en el mercado de bonos soberanos si supera 140.</p>
+        <!-- 3. Índice MOVE (Volatilidad Renta Fija) -->
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between shadow-lg space-y-3">
+          <div>
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-slate-100 text-md">3. Índice MOVE (Pánico en Bonos)</h3>
+                <p class="text-xs text-slate-400">Mide la incertidumbre en los tipos de interés de la Fed</p>
+              </div>
+              <button onclick="openModal('move_index')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition flex items-center gap-1">
+                <span>💬</span> Explicación & Riesgo
+              </button>
+            </div>
+            <div class="text-2xl font-extrabold text-white mt-2">98.4 <span class="text-xs font-semibold text-yellow-400">(Moderado)</span></div>
+          </div>
+          <!-- Gráfica Histórica en Vivo -->
+          <div id="tv_move_chart" class="h-48 w-full rounded-lg overflow-hidden border border-slate-700/60"></div>
         </div>
 
-        <!-- Fed Liquidity -->
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div class="text-xs text-slate-400 font-medium">Liquidez Neta Fed (WALCL - RRP - TGA)</div>
-          <div class="text-2xl font-bold text-white my-1">$ 6.12 T</div>
-          <div class="text-xs text-emerald-400 font-medium">● Estilizada / Neutra</div>
-          <p class="text-[11px] text-slate-400 mt-2">Drenajes bruscos de liquidez del Tesoro reducen soporte para activos de riesgo.</p>
+        <!-- 4. Liquidez Neta de la Reserva Federal -->
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between shadow-lg space-y-3">
+          <div>
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-slate-100 text-md">4. Liquidez Neta de la Fed</h3>
+                <p class="text-xs text-slate-400">Gasolina inyectada en el sistema financiero global</p>
+              </div>
+              <button onclick="openModal('fed_liquidity')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition flex items-center gap-1">
+                <span>💬</span> Explicación & Riesgo
+              </button>
+            </div>
+            <div class="text-2xl font-extrabold text-white mt-2">$ 6.12 Billones <span class="text-xs font-semibold text-emerald-400">(Estable)</span></div>
+          </div>
+          <!-- Gráfica Histórica en Vivo -->
+          <div class="h-48 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-slate-900">
+            <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=1vU5k&width=500&height=200" scrolling="no" class="w-full h-full border-0"></iframe>
+          </div>
         </div>
+
       </div>
 
-      <!-- Gráficos Renta Fija & Calendario Económico -->
+      <!-- Gráfico Macro US10Y & Calendario -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[480px]">
-          <h3 class="text-sm font-bold text-slate-200 mb-3">Rendimiento Bono EEUU 10 Años (US10Y)</h3>
+        <div class="lg:col-span-2 bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[450px]">
+          <h3 class="text-sm font-bold text-slate-200 mb-3">Evolución en Vivo: Rendimiento Bono US10Y</h3>
           <div id="tv_chart_us10y" class="w-full flex-grow rounded-lg overflow-hidden"></div>
         </div>
 
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[480px]">
-          <h3 class="text-sm font-bold text-slate-200 mb-3">Calendario Económico Macro</h3>
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[450px]">
+          <h3 class="text-sm font-bold text-slate-200 mb-3">Calendario Macro & Tipos de Interés</h3>
           <div id="tradingview_events" class="w-full flex-grow rounded-lg overflow-hidden"></div>
         </div>
       </div>
@@ -132,83 +179,96 @@
 
     <!-- PESTAÑA 2: RENTA VARIABLE & OPCIONES -->
     <div id="tabContentEquity" class="space-y-6 hidden">
-      
-      <!-- Bloque Opciones & Coberturas -->
-      <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 space-y-4 shadow-lg">
-        <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
-          <h3 class="text-md font-bold text-emerald-400 flex items-center gap-2">
-            <span>🎯</span> Estructura del Mercado de Opciones (S&P 500)
-          </h3>
-          <span class="text-xs bg-slate-900 text-slate-400 px-2.5 py-1 rounded border border-slate-700">Market Maker Hedging</span>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- 1. Put / Call Ratio -->
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between shadow-lg space-y-3">
+          <div>
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-slate-100 text-md">1. CBOE Put / Call Ratio</h3>
+                <p class="text-xs text-slate-400">Proporción de apuestas bajistas vs alcistas</p>
+              </div>
+              <button onclick="openModal('put_call')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition flex items-center gap-1">
+                <span>💬</span> Explicación & Riesgo
+              </button>
+            </div>
+            <div class="text-2xl font-extrabold text-white mt-2">0.85 <span class="text-xs font-semibold text-slate-300">(Equilibrado)</span></div>
+          </div>
+          <div id="tv_cpc_chart" class="h-48 w-full rounded-lg overflow-hidden border border-slate-700/60"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- 1. Put/Call Ratio -->
-          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700/60">
-            <div class="text-xs text-slate-400 font-semibold uppercase">Put / Call Ratio (CBOE)</div>
-            <div class="text-2xl font-extrabold text-white my-1">0.85 <span class="text-xs font-normal text-slate-400">(Zona Neutral)</span></div>
-            <p class="text-[11px] text-slate-400 leading-relaxed">
-              • <strong>&gt; 1.15:</strong> Cobertura de pánico. Marca suelos de mercado y rebotes por <em>Short Squeeze</em>.<br/>
-              • <strong>&lt; 0.65:</strong> Complacencia extrema. Elevado riesgo de corrección repentina.
-            </p>
+        <!-- 2. Gamma Exposure (GEX) & Coberturas -->
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between shadow-lg space-y-3">
+          <div>
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-slate-100 text-md">2. Régimen Gamma (GEX) & Market Makers</h3>
+                <p class="text-xs text-slate-400">Determina si el mercado se frena o se cae a plomo</p>
+              </div>
+              <button onclick="openModal('gex')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition flex items-center gap-1">
+                <span>💬</span> Explicación & Riesgo
+              </button>
+            </div>
+            <div class="text-2xl font-extrabold text-white mt-2">+GEX <span class="text-xs font-semibold text-emerald-400">(Zona de Amortiguador)</span></div>
           </div>
-
-          <!-- 2. Ciclo OpEx y Liberación -->
-          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700/60">
-            <div class="text-xs text-slate-400 font-semibold uppercase">Vencimientos Opciones (OpEx)</div>
-            <div class="text-sm font-bold text-yellow-400 my-1">Vencimiento Mensual en Cierre de Mes</div>
-            <p class="text-[11px] text-slate-400 leading-relaxed">
-              • <strong>Pre-OpEx:</strong> Mercado "Anclado" / El precio busca el punto <em>Max Pain</em>.<br/>
-              • <strong>Post-OpEx:</strong> Descomposición de coberturas. Liberación de tendencia y aceleración.
-            </p>
-          </div>
-
-          <!-- 3. Régimen GEX / Gamma -->
-          <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700/60">
-            <div class="text-xs text-slate-400 font-semibold uppercase">Régimen Gamma (GEX)</div>
-            <div class="text-sm font-bold text-emerald-400 my-1">Long Gamma (+GEX)</div>
-            <p class="text-[11px] text-slate-400 leading-relaxed">
-              • <strong>+GEX (Zona Verde):</strong> MMs compran caídas. Volatilidad contenida y precio sujeto.<br/>
-              • <strong>-GEX (Zona Roja):</strong> Venta forzada de coberturas. Caídas aceleradas / VIX disparado.
-            </p>
+          <div class="bg-slate-900 p-4 rounded-lg border border-slate-700/60 h-48 flex flex-col justify-center space-y-2">
+            <div class="flex justify-between text-xs text-slate-300"><span>Flip Level (Cambio de Régimen):</span> <strong class="text-yellow-400">SPX 4,480 pts</strong></div>
+            <div class="flex justify-between text-xs text-slate-300"><span>Muro de Puts (Suelo Cobertura):</span> <strong class="text-emerald-400">SPX 4,500 pts</strong></div>
+            <div class="flex justify-between text-xs text-slate-300"><span>Muro de Calls (Resistencia):</span> <strong class="text-rose-400">SPX 4,650 pts</strong></div>
+            <p class="text-[11px] text-slate-400 pt-1">Market Makers sostienen el mercado en 4,500$ comprando futuros hasta el próximo OpEx.</p>
           </div>
         </div>
+
+        <!-- 3. Ciclo Vencimiento de Opciones (OpEx) -->
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between shadow-lg space-y-3">
+          <div>
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-slate-100 text-md">3. Vencimientos OpEx & Efecto Magneto</h3>
+                <p class="text-xs text-slate-400">Cuándo expiran las coberturas y se desboca la tendencia</p>
+              </div>
+              <button onclick="openModal('opex')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition flex items-center gap-1">
+                <span>💬</span> Explicación & Riesgo
+              </button>
+            </div>
+            <div class="text-xl font-extrabold text-yellow-400 mt-2">Próximo Vencimiento Mensual</div>
+          </div>
+          <div class="bg-slate-900 p-4 rounded-lg border border-slate-700/60 h-48 flex flex-col justify-center space-y-3 text-xs text-slate-300">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+              <span><strong>Fase Pre-OpEx:</strong> El precio es atraído al punto de Máximo Dolor (Max Pain).</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+              <span><strong>Fase Post-OpEx:</strong> MMs deshacen coberturas. Liberación de volatilidad.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. VIX & Volatilidad S&P500 -->
+        <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col justify-between shadow-lg space-y-3">
+          <div>
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-bold text-slate-100 text-md">4. Índice VIX (Termómetro del Miedo)</h3>
+                <p class="text-xs text-slate-400">Volatilidad esperada a 30 días en el S&P 500</p>
+              </div>
+              <button onclick="openModal('vix')" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-3 py-1.5 rounded-lg border border-slate-600 font-semibold transition flex items-center gap-1">
+                <span>💬</span> Explicación & Riesgo
+              </button>
+            </div>
+            <div class="text-2xl font-extrabold text-white mt-2">15.2 <span class="text-xs font-semibold text-emerald-400">(Complacencia)</span></div>
+          </div>
+          <div id="tv_vix_chart" class="h-48 w-full rounded-lg overflow-hidden border border-slate-700/60"></div>
+        </div>
+
       </div>
 
-      <!-- Indicadores de Volatilidad Renta Variable -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div class="text-xs text-slate-400 font-medium">Índice VIX</div>
-          <div class="text-2xl font-bold text-white my-1">15.2</div>
-          <div class="text-xs text-emerald-400 font-medium">● Complacencia (&lt; 18)</div>
-          <p class="text-[11px] text-slate-400 mt-2">VIX &gt; 35 indica capitulación e inminentes zonas de rebote táctico.</p>
-        </div>
-
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div class="text-xs text-slate-400 font-medium">Ratio CBOE Put/Call (CPC)</div>
-          <div class="text-2xl font-bold text-white my-1">0.85</div>
-          <div class="text-xs text-slate-300 font-medium">● Neutro / Equilibrado</div>
-          <p class="text-[11px] text-slate-400 mt-2">Vigilar picos superiores a 1.20 como señal contraria de compra.</p>
-        </div>
-
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div class="text-xs text-slate-400 font-medium">S&P 500 / Volatilidad Realizada</div>
-          <div class="text-2xl font-bold text-white my-1">12.8 %</div>
-          <div class="text-xs text-emerald-400 font-medium">● Rango Contenido</div>
-          <p class="text-[11px] text-slate-400 mt-2">Comoresión extrema antecede expansiones bruscas de rango.</p>
-        </div>
-
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div class="text-xs text-slate-400 font-medium">Bitcoin Correlación Macro</div>
-          <div class="text-2xl font-bold text-white my-1">+0.74</div>
-          <div class="text-xs text-emerald-400 font-medium">● Alta Línea con SPX</div>
-          <p class="text-[11px] text-slate-400 mt-2">Actúa como termómetro adelantado del apetito por liquidez global.</p>
-        </div>
-      </div>
-
-      <!-- Gráfico Renta Variable (S&P 500) -->
+      <!-- Gráfico Técnico S&P 500 -->
       <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[500px]">
-        <h3 class="text-sm font-bold text-slate-200 mb-3">Gráfico Interactivo S&P 500 (SPX)</h3>
+        <h3 class="text-sm font-bold text-slate-200 mb-3">Gráfico Interactivo S&P 500 con Niveles de Soporte/Resistencia</h3>
         <div id="tv_chart_spx" class="w-full flex-grow rounded-lg overflow-hidden"></div>
       </div>
 
@@ -216,17 +276,81 @@
 
   </main>
 
-  <!-- LÓGICA JAVASCRIPT -->
+  <!-- PANTALLA EMERGENTE (MODAL DIDÁCTICO PARA TONTOS) -->
+  <div id="infoModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl space-y-5">
+      
+      <!-- Encabezado del Modal -->
+      <div class="flex justify-between items-start border-b border-slate-700 pb-4">
+        <div>
+          <h2 id="modalTitle" class="text-xl font-bold text-emerald-400">Título del Parámetro</h2>
+          <p id="modalSub" class="text-xs text-slate-400">Subtítulo explicativo</p>
+        </div>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white text-xl font-bold p-1">&times;</button>
+      </div>
+
+      <!-- Gráfico de Zonas de Riesgo (Semaforo) -->
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold text-slate-300 uppercase">Mapa Visual de Zonas de Riesgo</h3>
+        <div class="grid grid-cols-3 gap-2 text-center text-xs font-bold rounded-lg overflow-hidden p-1 bg-slate-900 border border-slate-700">
+          <div id="zoneGreen" class="bg-emerald-950/80 text-emerald-400 border border-emerald-700/50 p-2 rounded">
+            <span class="block font-bold">VERDE</span>
+            <span id="txtGreen" class="text-[10px] font-normal block mt-1">Calma / Seguro</span>
+          </div>
+          <div id="zoneYellow" class="bg-yellow-950/80 text-yellow-400 border border-yellow-700/50 p-2 rounded">
+            <span class="block font-bold">AMARILLO</span>
+            <span id="txtYellow" class="text-[10px] font-normal block mt-1">Precaución</span>
+          </div>
+          <div id="zoneRed" class="bg-rose-950/80 text-rose-400 border border-rose-700/50 p-2 rounded">
+            <span class="block font-bold">ROJO</span>
+            <span id="txtRed" class="text-[10px] font-normal block mt-1">Pánico / Peligro</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Explicación Sencilla (Para tontos) -->
+      <div class="space-y-3 text-xs leading-relaxed text-slate-300">
+        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700/80">
+          <h4 class="font-bold text-emerald-400 mb-1">💡 Explicación "para principiantes":</h4>
+          <p id="modalSimple">Aquí va el texto sencillo...</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-700/50">
+            <span class="font-bold text-rose-400 block mb-1">📈 ¿Qué pasa si SUBE?</span>
+            <p id="modalUp" class="text-[11px] text-slate-400">Significado...</p>
+          </div>
+          <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-700/50">
+            <span class="font-bold text-emerald-400 block mb-1">📉 ¿Qué pasa si BAJA?</span>
+            <p id="modalDown" class="text-[11px] text-slate-400">Significado...</p>
+          </div>
+        </div>
+
+        <!-- Ejemplo Práctico de Mercado -->
+        <div class="bg-emerald-950/30 border border-emerald-800/50 p-4 rounded-xl">
+          <h4 class="font-bold text-emerald-300 mb-1">🎯 Ejemplo Real y Práctico en el Mercado:</h4>
+          <p id="modalExample" class="text-[11px] text-slate-300 leading-snug">Ejemplo de mercado real...</p>
+        </div>
+      </div>
+
+      <!-- Botón Entendido -->
+      <div class="text-right pt-2 border-t border-slate-700">
+        <button onclick="closeModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-5 py-2 rounded-lg transition">Entendido</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- LÓGICA JAVASCRIPT Y DICCIONARIO DIDÁCTICO -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const savedKey = localStorage.getItem("gemini_api_key");
       if (savedKey) document.getElementById("apiKeyInput").value = savedKey;
       
-      // Inicializar Gráficos de TradingView
       initTradingViewCharts();
     });
 
-    // Control de Pestañas
+    // Cambiar Pestañas
     function switchTab(tab) {
       const btnFixed = document.getElementById("tabBtnFixed");
       const btnEquity = document.getElementById("tabBtnEquity");
@@ -258,7 +382,6 @@
         "theme": "dark",
         "style": "1",
         "locale": "es",
-        "enable_publishing": false,
         "container_id": "tv_chart_us10y"
       });
 
@@ -271,11 +394,43 @@
         "theme": "dark",
         "style": "1",
         "locale": "es",
-        "enable_publishing": false,
         "container_id": "tv_chart_spx"
       });
 
-      // Calendario Económico
+      // Gráfico MOVE
+      new TradingView.widget({
+        "autosize": true,
+        "symbol": "INDEX:MOVE",
+        "interval": "D",
+        "theme": "dark",
+        "style": "2",
+        "locale": "es",
+        "container_id": "tv_move_chart"
+      });
+
+      // Gráfico VIX
+      new TradingView.widget({
+        "autosize": true,
+        "symbol": "CBOE:VIX",
+        "interval": "D",
+        "theme": "dark",
+        "style": "2",
+        "locale": "es",
+        "container_id": "tv_vix_chart"
+      });
+
+      // Gráfico Put/Call Ratio
+      new TradingView.widget({
+        "autosize": true,
+        "symbol": "USI:PCC",
+        "interval": "D",
+        "theme": "dark",
+        "style": "2",
+        "locale": "es",
+        "container_id": "tv_cpc_chart"
+      });
+
+      // Calendario
       const script = document.createElement('script');
       script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-events.js';
       script.async = true;
@@ -290,6 +445,119 @@
       document.getElementById("tradingview_events").appendChild(script);
     }
 
+    // BASE DE DATOS DIDÁCTICA PARA EL MODAL
+    const modalData = {
+      yield_curve: {
+        title: "1. Curva de Tipos (10Y - 2Y)",
+        sub: "Diferencia entre la rentabilidad del bono de EE.UU. a 10 años y a 2 años",
+        green: "Normal (&gt; +0.20%)",
+        yellow: "Invertida (&lt; 0.00%)",
+        red: "Desinversión Rápida",
+        simple: "Imagina que le prestas dinero a tu vecino. Lo normal es que pidas más interés por prestárselo a 10 años que a 2 años porque hay más riesgo. Cuando el bono a 2 años paga MÁS que el de 10 años (curva invertida), los bancos entran en pánico porque no pueden ganar dinero prestando a largo plazo.",
+        up: "La curva vuelve a la normalidad. Es sano para los bancos, pero si sube muy rápido tras estar invertida, anuncia que la recesión ya ha empezado.",
+        down: "La curva se invierte (negativa). Históricamente ha anticipado el 100% de las recesiones en los últimos 50 años.",
+        example: "Si la curva está en -0.50% y de repente sube rápido a +0.40% mientras la Fed baja tipos de urgencia, las acciones suelen caer un -20% en los meses siguientes porque las empresas empiezan a quebrar."
+      },
+      hy_oas: {
+        title: "2. Spread Bonos Basura (HY OAS)",
+        sub: "El diferencial de sobreprecio que pagan las empresas con riesgo de quiebra",
+        green: "Calma (&lt; 3.5%)",
+        yellow: "Tensión (3.5% - 5.0%)",
+        red: "Impagos (&gt; 5.5%)",
+        simple: "Mide cuánto extra de interés tienen que pagar las empresas 'malas' o endeudadas para que alguien les preste dinero, en comparación con el gobierno de EE.UU. Si nadie se fía de ellas, les exigen un interés desorbitado.",
+        up: "Pánico crediticio. Las empresas endeudadas no pueden refinanciar sus deudas y empiezan a quebrar. Caída dura en bolsas.",
+        down: "Tranquilidad financiera. El dinero fluye con facilidad y los inversores no temen que las empresas quiebren.",
+        example: "En las crisis de 2008 y 2020, este indicador se disparó por encima del 10%. Cuando supera el 5.0%, hay que vender acciones de alto riesgo e irse a efectivo."
+      },
+      move_index: {
+        title: "3. Índice MOVE (Pánico en Bonos)",
+        sub: "El VIX del mercado de deuda soberana de EE.UU.",
+        green: "Bajo (&lt; 90 pts)",
+        yellow: "Elevado (90 - 120)",
+        red: "Iliquidez (&gt; 140 pts)",
+        simple: "Es el termómetro que mide las 'curvas' e incertidumbre que esperan los inversores en el mercado de bonos del gobierno. Si el mercado de bonos se pone nervioso, el mercado de acciones colapsa poco después.",
+        up: "Pánico entre los inversores institucionales por miedo a lo que haga la Fed con los tipos. Iliquidez en los mercados.",
+        down: "Estabilidad. Los grandes fondos pueden predecir el futuro de los tipos de interés y compran activos con calma.",
+        example: "Cuando el MOVE supera los 140 puntos (como en la quiebra de Silicon Valley Bank en 2023), los bancos dejan de prestarse dinero entre sí y la bolsa sufre caídas relámpago."
+      },
+      fed_liquidity: {
+        title: "4. Liquidez Neta de la Reserva Federal",
+        sub: "Balance Fed minus Depósitos del Tesoro (TGA) minus Facilidad Repos (RRP)",
+        green: "Inyección (&gt; $6.2T)",
+        yellow: "Estable ($5.8 - $6.2T)",
+        red: "Drenaje (&lt; $5.8T)",
+        simple: "Es la cantidad real de 'dólares líquidos' flotando en el sistema bancario. Si la Fed imprime o el gobierno gasta su cuenta corriente, entra gasolina al mercado. Si la Fed retira dinero, el mercado se queda sin oxígeno.",
+        up: "Inyección de liquidez. Sube todo: S&P 500, Bitcoin, Tecnología y activos de riesgo.",
+        down: "Drenaje de dinero. Faltan dólares en el sistema y los mercados sufren correcciones por falta de compradores.",
+        example: "Si la liquidez neta baja de 6.0 a 5.5 Billones de dólares porque el gobierno emite mucha deuda para financiarse, la bolsa pierde soporte y cae aunque las empresas reporten buenos beneficios."
+      },
+      put_call: {
+        title: "1. CBOE Put / Call Ratio",
+        sub: "Relación entre apuestas a que el mercado cae (Puts) y a que sube (Calls)",
+        green: "Pánico / Compra (&gt; 1.15)",
+        yellow: "Neutro (0.75 - 1.0)",
+        red: "Complacencia (&lt; 0.60)",
+        simple: "Funciona como un indicador inverso (psicología de masas). Cuando todo el mundo compra Puts porque tiene miedo, los grandes fondos ya se han protegido y el mercado suele rebotar con violencia al alza.",
+        up: "Todo el mundo está comprando seguros bajistas (Puts). Señal de suelo cercano por pánico exagerado.",
+        down: "Todo el mundo compra opciones alcistas (Calls). Exceso de confianza y complacencia: riesgo de trampa bajista.",
+        example: "Si el Put/Call Ratio salta a 1.25, la masa está sobre-protegida. Los Market Makers que vendieron esas opciones se ven obligados a comprar acciones para cubrirse, provocando un gran rebote alcista."
+      },
+      gex: {
+        title: "2. Régimen Gamma (GEX) & Coberturas",
+        sub: "El comportamiento obligatorio de los Creadores de Mercado (Market Makers)",
+        green: "+GEX (Sujeto / Freno)",
+        yellow: "Gamma Neutral (Flip)",
+        red: "-GEX (Pánico / Caída)",
+        simple: "Los creadores de mercado (los gigantes que nos venden las opciones) deben estar siempre neutrales. Si estamos en +GEX, tienen que comprar cuando el mercado cae y vender cuando sube, actuando como un muelle que frena el precio. Si cae a -GEX, se ven obligados a vender cuando el mercado cae, acelerando el desplome.",
+        up: "Long Gamma (+GEX): El mercado está encajonado entre muros. Volatilidad aplastada.",
+        down: "Short Gamma (-GEX): Caídas en cascada. Cada punto que cae el índice obliga a los fondos a vender más futuros.",
+        example: "Actualmente hay acumuladas muchas opciones Put en el mercado que hacen que los Market Makers hayan tenido que comprar acciones/futuros para cubrirse, creando un muro de soporte infranqueable en el entorno de los 4,500$. Es muy poco probable que el índice baje de 4,500$ hasta que no expiren esas opciones el 30/09/2026."
+      },
+      opex: {
+        title: "3. Vencimientos OpEx & Efecto Magneto",
+        sub: "Ciclo de expiración de contratos de opciones (3er viernes de cada mes)",
+        green: "Post-OpEx (Tendencia)",
+        yellow: "Semana OpEx (Anclado)",
+        red: "Quadruple Witching",
+        simple: "Las opciones tienen fecha de caducidad. Durante la semana previa al vencimiento, el mercado se queda 'atrapado' intentando llevar el precio hacia el punto donde más dinero pierden los compradores de opciones (Max Pain). Una vez pasan los vencimientos, los fondos deshacen coberturas y la tendencia se libera.",
+        up: "Aproximación a expiración: Mismo rango lateral, baja volatilidad y precio imantado a strikes clave.",
+        down: "Paso del vencimiento: Liberación de coberturas. Movimientos agresivos y tendencia definida.",
+        example: "En los días previos al OpEx del 30/09/2026, el S&P 500 no podrá salir del rango 4,500$ - 4,550$. El lunes 02/10/2026, una vez vencidas las opciones, el mercado se desboca y busca los 4,700$ sin freno."
+      },
+      vix: {
+        title: "4. Índice VIX (Termómetro del Miedo)",
+        sub: "La volatilidad esperada por el mercado para los próximos 30 días",
+        green: "Complacencia (&lt; 18 pts)",
+        yellow: "Tensión (18 - 28 pts)",
+        red: "Pánico (&gt; 35 pts)",
+        simple: "Mide cuánto están dispuestos a pagar los inversores por proteger sus carteras. Si el VIX está muy bajo, nadie espera turbulencias. Si el VIX se dispara, cunde el pánico.",
+        up: "Miedo e incertidumbre descontrolada en bolsas. Caídas bruscas en el S&P 500.",
+        down: "Tranquilidad y subida pausada de las acciones ('Subir por la escalera, bajar por el ascensor').",
+        example: "Cuando el VIX supera los 35 o 40 puntos, la venta por pánico alcanza su clímax. Históricamente, comprar S&P 500 cuando el VIX supera 35 genera rentabilidades excelentes a 12 meses."
+      }
+    };
+
+    function openModal(key) {
+      const d = modalData[key];
+      if (!d) return;
+
+      document.getElementById("modalTitle").innerText = d.title;
+      document.getElementById("modalSub").innerText = d.sub;
+      document.getElementById("txtGreen").innerHTML = d.green;
+      document.getElementById("txtYellow").innerHTML = d.yellow;
+      document.getElementById("txtRed").innerHTML = d.red;
+      document.getElementById("modalSimple").innerText = d.simple;
+      document.getElementById("modalUp").innerText = d.up;
+      document.getElementById("modalDown").innerText = d.down;
+      document.getElementById("modalExample").innerText = d.example;
+
+      document.getElementById("infoModal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("infoModal").classList.add("hidden");
+    }
+
     function saveApiKey() {
       const key = document.getElementById("apiKeyInput").value.trim();
       if (key) {
@@ -300,7 +568,7 @@
       }
     }
 
-    // Análisis Inteligente integrando Opciones y Deuda con Gemini 3.8 Flash
+    // Análisis Inteligente Sencillo y Educativo con Gemini
     async function runGeminiAnalysis() {
       const apiKey = localStorage.getItem("gemini_api_key") || document.getElementById("apiKeyInput").value.trim();
       if (!apiKey) {
@@ -309,45 +577,49 @@
       }
 
       const outputDiv = document.getElementById("aiOutput");
-      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Analizando estrucucutra macro y mercado de opciones con Gemini 3.8 Flash...</span>";
+      outputDiv.innerHTML = "<span class='text-emerald-400 font-semibold animate-pulse'>Gemini está traduciendo los datos macro y de opciones a un informe didáctico sencillo...</span>";
 
-      const promptText = `Actúa como un analista macroeconómico y cuantitativo experto en la estructura del mercado de opciones (Gamma, OpEx, Put/Call) para un trader de S&P500/BTC.
+      const promptText = `Actúa como un profesor y analista financiero muy claro que le explica la situación a un inversor principiante.
 
-A continuación tienes las lecturas actuales:
-- Curva de Tipos (10Y-2Y): +0.18% (Desinversión progresiva)
-- Spread Bonos Basura (HY OAS): 3.25% (Riesgo crediticio bajo)
-- Índice MOVE: 98.4 | VIX: 15.2
-- Estado de Opciones: Put/Call Ratio en 0.85, ventana OpEx en régimen Long Gamma (+GEX).
+A continuación tienes los datos de mercado de hoy:
+- Curva de Tipos (10Y-2Y): +0.18% (Vuelve a la normalidad poco a poco)
+- Spread Bonos Basura (HY OAS): 3.25% (Riesgo de impago empresarial muy bajo)
+- Índice MOVE: 98.4 | VIX: 15.2 (Nivel de tranquilidad)
+- Mercado de Opciones: Put/Call Ratio en 0.85, ventana OpEx con muro de Puts en SPX 4,500$ y régimen Long Gamma (+GEX).
 
 Instrucciones de respuesta:
-1. Asigna una Fase de Crisis de Deuda (1 a 4) y justifica en 1 frase.
-2. Explica cómo la dinámica de Opciones/OpEx actual afecta al S&P500 (¿Mercado anclado o riesgo de ruptura post-expiración?).
-3. Identifica el principal riesgo latente que el análisis técnico clásico ignora ahora mismo.
-4. Recomendación de asignación de activos entre S&P500, Oro, BTC y Efectivo, finalizando con una conclusión ejecutiva de 2 frases.`;
+1. Resumen en 2 frases muy sencillas de la salud del mercado hoy.
+2. Explica qué hacen los Creadores de Mercado con las opciones ahora mismo (mencionando el suelo/muro de soporte y la expiración).
+3. ¿Cuál es la mejor estrategia de inversión para esta semana (Acciones, Oro, BTC o Efectivo)? Explicado para principiantes.`;
 
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
+      const candidateModels = ["gemini-3.8-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+      let lastError = "";
 
-      try {
-        const response = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: promptText }] }]
-          })
-        });
+      for (const model of candidateModels) {
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+          const response = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: promptText }] }]
+            })
+          });
 
-        const data = await response.json();
+          const data = await response.json();
 
-        if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
-          outputDiv.innerText = data.candidates[0].content.parts[0].text;
-        } else if (data.error) {
-          outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error API (${data.error.code}):</strong> ${data.error.message}</span>`;
-        } else {
-          outputDiv.innerText = "Respuesta vacía o formato no reconocido.";
+          if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
+            outputDiv.innerText = data.candidates[0].content.parts[0].text;
+            return;
+          } else if (data.error) {
+            lastError = `[${model}] ${data.error.message}`;
+          }
+        } catch (err) {
+          lastError = err.message;
         }
-      } catch (err) {
-        outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de red:</strong> ${err.message}</span>`;
       }
+
+      outputDiv.innerHTML = `<span class='text-rose-400'><strong>Error de conexión:</strong> ${lastError}</span>`;
     }
   </script>
 </body>
