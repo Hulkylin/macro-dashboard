@@ -169,20 +169,39 @@
 
       </div>
 
-      <!-- Gráfico US10Y & Calendario -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[500px]">
+      <!-- SEPARACIÓN CLARA: PRECIO DEL BONO (IZQ) VS INTERÉS/YIELD DEL BONO (DER) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Precio del Bono a 10 Años (Futuro ZN) -->
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[500px]">
           <div class="flex justify-between items-center mb-3">
-            <h3 class="text-sm font-bold text-slate-200">Evolución en Vivo: Rendimiento Bono US10Y (EE.UU.)</h3>
-            <button onclick="zoomGraph('tv', 'TVC:US10Y', 'Bono EE.UU. 10 Años (US10Y)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1 rounded border border-slate-600 font-semibold">🔍 Ampliar</button>
+            <div>
+              <h3 class="text-sm font-bold text-slate-200">Precio del Bono 10A (Futuro ZN)</h3>
+              <p class="text-[11px] text-slate-400">Sube si el bono se encarece (bajan tipos)</p>
+            </div>
+            <button onclick="zoomGraph('tv', 'CBOT:ZN1!', 'Precio Futuro Bono 10 Años (ZN1!)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1 rounded border border-slate-600 font-semibold">🔍 Ampliar</button>
+          </div>
+          <div id="tv_chart_zn" class="w-full flex-grow rounded-lg overflow-hidden"></div>
+        </div>
+
+        <!-- Interés / Rentabilidad Oficial (Yield US10Y) -->
+        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[500px]">
+          <div class="flex justify-between items-center mb-3">
+            <div>
+              <h3 class="text-sm font-bold text-slate-200">Interés / Rentabilidad del Bono 10A (Yield US10Y)</h3>
+              <p class="text-[11px] text-slate-400">Rentabilidad porcentual exigida en mercado secundario</p>
+            </div>
+            <button onclick="zoomGraph('tv', 'TVC:US10Y', 'Interés Bono EE.UU. 10 Años (US10Y)')" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs px-2.5 py-1 rounded border border-slate-600 font-semibold">🔍 Ampliar</button>
           </div>
           <div id="tv_chart_us10y" class="w-full flex-grow rounded-lg overflow-hidden"></div>
         </div>
 
-        <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[500px]">
-          <h3 class="text-sm font-bold text-slate-200 mb-3">Calendario Macro & Eventos Fed</h3>
-          <div id="tradingview_events" class="w-full flex-grow rounded-lg overflow-hidden"></div>
-        </div>
+      </div>
+
+      <!-- Calendario Económico -->
+      <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex flex-col h-[450px]">
+        <h3 class="text-sm font-bold text-slate-200 mb-3">Calendario Macro & Eventos Fed</h3>
+        <div id="tradingview_events" class="w-full flex-grow rounded-lg overflow-hidden"></div>
       </div>
     </div>
 
@@ -408,6 +427,18 @@
     function initTradingViewCharts() {
       if (typeof TradingView === "undefined") return;
 
+      // 1. Futuro del Bono 10A (Precio)
+      new TradingView.widget({
+        "autosize": true,
+        "symbol": "CBOT:ZN1!",
+        "interval": "D",
+        "theme": "dark",
+        "style": "1",
+        "locale": "es",
+        "container_id": "tv_chart_zn"
+      });
+
+      // 2. Rendimiento / Interés del Bono 10A (Yield)
       new TradingView.widget({
         "autosize": true,
         "symbol": "TVC:US10Y",
@@ -418,6 +449,7 @@
         "container_id": "tv_chart_us10y"
       });
 
+      // 3. S&P 500
       new TradingView.widget({
         "autosize": true,
         "symbol": "FOREXCOM:SPXUSD",
@@ -428,6 +460,7 @@
         "container_id": "tv_chart_spx"
       });
 
+      // 4. Índice MOVE
       new TradingView.widget({
         "autosize": true,
         "symbol": "INDEX:MOVE",
@@ -438,6 +471,7 @@
         "container_id": "tv_move_chart"
       });
 
+      // 5. VIX
       new TradingView.widget({
         "autosize": true,
         "symbol": "CBOE:VIX",
@@ -448,6 +482,7 @@
         "container_id": "tv_vix_chart"
       });
 
+      // 6. Put/Call Ratio
       new TradingView.widget({
         "autosize": true,
         "symbol": "USI:PCC",
@@ -458,6 +493,7 @@
         "container_id": "tv_cpc_chart"
       });
 
+      // Calendario
       const script = document.createElement('script');
       script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-events.js';
       script.async = true;
@@ -590,7 +626,7 @@
         simple: "Mide el coste de los seguros bajistas. Por debajo de 18 indica complacencia y calma alcista.",
         up: "<strong class='text-rose-400'>Negativo:</strong> Pánico en bolsas y caídas bruscas en las acciones.",
         down: "<strong class='text-emerald-400'>Positivo:</strong> Calma, tranquilidad y subidas constantes en la renta variable.",
-        example: "Un VIX en 15.2 refleja tranquilidad en la renta variable."
+        example: "Un VIX in 15.2 refleja tranquilidad en la renta variable."
       }
     };
 
