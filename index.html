@@ -81,7 +81,7 @@
             <button onclick="askGemini()" class="bg-slate-700 hover:bg-slate-600 text-emerald-400 text-xs px-4 py-2 rounded-lg font-bold border border-slate-600 transition flex-shrink-0">Preguntar</button>
           </div>
         </div>
-        <div class="text-[11px] text-slate-500 mt-2 text-right">Motor: Gemini 2.0 Flash</div>
+        <div class="text-[11px] text-slate-500 mt-2 text-right">Motor: Gemini 3.8 Flash</div>
       </div>
     </section>
 
@@ -104,8 +104,10 @@
             </div>
             <div class="text-2xl font-extrabold text-white mt-1">+0.18 % <span class="text-xs font-semibold text-emerald-400">(Normalizada)</span></div>
           </div>
-          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-white">
-            <iframe src="https://fred.stlouisfed.org/graph/graph-element.php?id=T10Y2Y" class="w-full h-full border-0"></iframe>
+          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-white flex items-center justify-center">
+            <a href="https://fred.stlouisfed.org/series/T10Y2Y" target="_blank" class="w-full h-full block">
+              <img src="https://fred.stlouisfed.org/graph/fredgraph.png?id=T10Y2Y&nvd=1" alt="FRED T10Y2Y" class="w-full h-full object-contain bg-white" />
+            </a>
           </div>
         </div>
 
@@ -124,8 +126,10 @@
             </div>
             <div class="text-2xl font-extrabold text-white mt-1">3.25 % <span class="text-xs font-semibold text-emerald-400">(Tranquilidad)</span></div>
           </div>
-          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-white">
-            <iframe src="https://fred.stlouisfed.org/graph/graph-element.php?id=BAMLH0A0HYM2" class="w-full h-full border-0"></iframe>
+          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-white flex items-center justify-center">
+            <a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank" class="w-full h-full block">
+              <img src="https://fred.stlouisfed.org/graph/fredgraph.png?id=BAMLH0A0HYM2&nvd=1" alt="FRED BAMLH0A0HYM2" class="w-full h-full object-contain bg-white" />
+            </a>
           </div>
         </div>
 
@@ -162,8 +166,10 @@
             </div>
             <div class="text-2xl font-extrabold text-white mt-1">$ 6.88 Billones <span class="text-xs font-semibold text-emerald-400">(Estable)</span></div>
           </div>
-          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-white">
-            <iframe src="https://fred.stlouisfed.org/graph/graph-element.php?id=WALCL" class="w-full h-full border-0"></iframe>
+          <div class="h-80 w-full rounded-lg overflow-hidden border border-slate-700/60 bg-white flex items-center justify-center">
+            <a href="https://fred.stlouisfed.org/series/WALCL" target="_blank" class="w-full h-full block">
+              <img src="https://fred.stlouisfed.org/graph/fredgraph.png?id=WALCL&nvd=1" alt="FRED WALCL" class="w-full h-full object-contain bg-white" />
+            </a>
           </div>
         </div>
 
@@ -328,7 +334,7 @@
         <h2 id="zoomTitle" class="text-lg font-bold text-emerald-400">Gráfico en Detalle</h2>
         <button onclick="closeZoomModal()" class="text-slate-400 hover:text-white text-2xl font-bold px-2">&times;</button>
       </div>
-      <div id="zoomContent" class="w-full flex-grow rounded-xl overflow-hidden bg-slate-900 border border-slate-700/80"></div>
+      <div id="zoomContent" class="w-full flex-grow rounded-xl overflow-hidden bg-slate-900 border border-slate-700/80 flex items-center justify-center"></div>
     </div>
   </div>
 
@@ -474,7 +480,7 @@
       target.innerHTML = "";
 
       if (type === 'fred') {
-        target.innerHTML = `<iframe src="https://fred.stlouisfed.org/graph/graph-element.php?id=${source}" scrolling="no" class="w-full h-full border-0 bg-white"></iframe>`;
+        target.innerHTML = `<img src="https://fred.stlouisfed.org/graph/fredgraph.png?id=${source}&nvd=1" alt="FRED ${source}" class="max-w-full max-h-full object-contain bg-white rounded-lg p-2" />`;
       } else if (type === 'tv') {
         const div = document.createElement("div");
         div.id = "zoom_tv_container";
@@ -648,7 +654,7 @@
       }
 
       const outputDiv = document.getElementById("aiOutput");
-      outputDiv.innerHTML = `<p class='text-emerald-400 font-semibold animate-pulse'>Procesando informe general con Gemini 2.0 Flash...</p>`;
+      outputDiv.innerHTML = `<p class='text-emerald-400 font-semibold animate-pulse'>Procesando informe general con Gemini 3.8 Flash...</p>`;
 
       const promptText = `Actúa como un mentor financiero y analista cuantitativo experto para el Dashboard Inversiones.
 
@@ -693,7 +699,8 @@ Instrucciones: Responde de forma concisa, didáctica y directa utilizando los da
     }
 
     async function callGeminiApi(apiKey, promptText, targetElement, isAppend) {
-      const candidateModels = ["gemini-2.0-flash", "gemini-2.5-flash"];
+      // Candidatos recomendados por Google
+      const candidateModels = ["gemini-3.8-flash", "gemini-2.0-flash"];
       let lastError = "";
 
       for (const model of candidateModels) {
